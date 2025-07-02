@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,20 +61,7 @@
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             opacity: 0;
             transform: translateY(30px);
-            border: 1px solid var(--border-color);            @media (max-width: 767px) {
-                .section-card {
-                    padding: 1.25rem;
-                    margin-bottom: 2rem;
-                    border-radius: 1rem;
-                }
-                .container {
-                    padding: 0.75rem;
-                }
-                .main-title {
-                    font-size: 2.25rem;
-                }
-                /* Add more mobile-specific styles as needed */
-            }
+            border: 1px solid var(--border-color);
         }
         .section-card.is-revealed {
             animation: slideInUp 0.8s ease-out forwards;
@@ -88,7 +76,9 @@
         .section-card.is-revealed h2,
         .section-card.is-revealed h3,
         .section-card.is-revealed p,
-        .section-card.is-revealed .btn-primary {
+        .section-card.is-revealed .btn-primary,
+        .section-card.is-revealed .social-login-button,
+        .section-card.is-revealed .service-item { /* Added service-item */
             animation: textFadeIn 0.8s ease-out forwards;
             opacity: 0; /* Start hidden */
         }
@@ -97,6 +87,8 @@
         .section-card.is-revealed h3 { animation-delay: 0.3s; }
         .section-card.is-revealed p { animation-delay: 0.4s; }
         .section-card.is-revealed .btn-primary { animation-delay: 0.5s; }
+        .section-card.is-revealed .social-login-button { animation-delay: 0.6s; }
+        .section-card.is-revealed .service-item { animation-delay: 0.5s; } /* Stagger for service items */
 
 
         /* --- Typography & Title Styles --- */
@@ -188,7 +180,166 @@
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
         }
         
+        /* New style for the UPI link */
+        .upi-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--foreground);
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .upi-link:hover {
+            color: #6ee7b7; /* A subtle green from Tailwind's emerald-300 for emphasis */
+            text-decoration: underline;
+        }
+
+        /* Styles for social login buttons */
+        .social-login-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid transparent;
+            color: var(--foreground); /* Default text color */
+            background-color: var(--card-bg); /* Default background */
+        }
+        .social-login-button i {
+            font-size: 1.5rem;
+        }
+
+        .social-login-button.google {
+            border-color: #db4437; /* Google red */
+        }
+        .social-login-button.google:hover {
+            background-color: #db4437;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(219, 68, 55, 0.3);
+        }
+
+        .social-login-button.github {
+            border-color: #333; /* GitHub dark gray */
+        }
+        .social-login-button.github:hover {
+            background-color: #333;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(51, 51, 51, 0.3);
+        }
+
+        .social-login-button.facebook {
+            border-color: #1877f2; /* Facebook blue */
+        }
+        .social-login-button.facebook:hover {
+            background-color: #1877f2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
+        }
+
+        .social-login-button.instagram {
+            border-color: #c13584; /* Instagram gradient-ish */
+        }
+        .social-login-button.instagram:hover {
+            background-color: #c13584;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(193, 53, 132, 0.3);
+        }
+
+        /* Styling for the services section */
+        .service-item {
+            background-color: #1f1f22; /* Slightly lighter card background */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--foreground);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .service-item:hover .service-icon {
+            color: #6ee7b7; /* Highlight icon on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .section-card {
+                padding: 1.5rem;
+                margin-bottom: 2.5rem;
+                border-radius: 1.25rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .main-title {
+                font-size: 3.5rem; /* Further adjusted for very small screens */
+            }
+            .text-xl.md\:text-2xl {
+                font-size: 1.125rem; /* text-xl */
+            }
+            .text-3xl.md\:text-4xl {
+                font-size: 2rem; /* text-3xl */
+            }
+            .btn-primary {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.9rem;
+            }
+            .profile-img {
+                width: 180px;
+                height: 180px;
+            }
+            .about-grid { /* Revert to single column on small screens */
+                grid-template-columns: 1fr;
+            }
+            .connect-grid-content.text-left.md\:text-right {
+                text-align: left; /* Ensure left alignment on mobile */
+            }
+            .connect-grid-content.text-left.md\:border-t-0 {
+                border-top: 2px solid var(--zinc-800);
+                padding-top: 2rem;
+                margin-top: 2rem;
+                padding-left: 0; /* Remove desktop padding */
+            }
+            .social-links-mobile-center {
+                justify-content: center; /* Center social links on mobile */
+            }
+            .social-login-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            .social-login-button i {
+                font-size: 1.25rem;
+            }
+        }
         @media (min-width: 768px) {
+            .main-title {
+                font-size: 9rem; /* text-9xl */
+            }
+            .text-xl.md\:text-2xl {
+                font-size: 1.5rem; /* text-2xl */
+            }
+            .text-3xl.md\:text-4xl {
+                font-size: 2.25rem; /* text-4xl */
+            }
             .about-grid { grid-template-columns: 1fr 250px; }
         }
     </style>
@@ -209,8 +360,46 @@
             <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto">
                 Subscribe and join the CINI FX community today!
             </p>
+            <a href="https://www.youtube.com/@CINIFX-CREATION" target="_blank" class="btn-primary mt-8">
+                <i class="fa-brands fa-youtube"></i> Visit My YouTube Channel
+            </a>
         </section>
         
+        <section class="section-card" data-section>
+            <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Services I Offer</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="service-item">
+                    <i class="fas fa-video service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Video Editing</h3>
+                    <p class="text-sm text-zinc-400">Professional video editing for various platforms, from short films to social media content.</p>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-camera-retro service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Event Photography</h3>
+                    <p class="text-sm text-zinc-400">Capturing memorable moments from events, ensuring high-quality and dynamic visuals.</p>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-calendar-check service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Event Managing</h3>
+                    <p class="text-sm text-zinc-400">From concept to execution, I can help manage your events, ensuring smooth operation.</p>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-laptop-code service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Website Making</h3>
+                    <p class="text-sm text-zinc-400">Creating responsive and modern websites tailored to your needs, just like this one!</p>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-magic service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">VFX (Visual Effects)</h3>
+                    <p class="text-sm text-zinc-400">Adding stunning visual effects to your projects, bringing imagination to life.</p>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-running service-icon"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Animation</h3>
+                    <p class="text-sm text-zinc-400">Bringing characters and stories to life through dynamic 2D and 3D animation.</p>
+                </div>
+            </div>
+        </section>
 
         <section class="section-card" data-section>
             <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-4 text-center">Tech & Creative Quiz</h2>
@@ -233,11 +422,11 @@
                 <div>
                     <h3 class="text-xl font-semibold text-white mb-4">Blender & 3D</h3>
                     <div class="space-y-3">
-                        <a href="https://www.youtube.com/user/AndrewPPrice" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
-                        <a href="https://www.youtube.com/c/IanHubert" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
-                        <a href="https://www.youtube.com/c/CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
-                        <a href="https://www.youtube.com/c/Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
-                        <a href="https://www.youtube.com/c/Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
+                        <a href="https://www.youtube.com/@BlenderGuruOfficial" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
+                        <a href="https://www.youtube.com/@IanHubert" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
+                        <a href="https://www.youtube.com/@CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
+                        <a href="https://www.youtube.com/@Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
+                        <a href="https://www.youtube.com/@Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
                         <a href="https://polyhaven.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Poly Haven (Assets)</a>
                         <a href="https://www.artstation.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ArtStation (Inspiration)</a>
                     </div>
@@ -245,9 +434,9 @@
                 <div>
                     <h3 class="text-xl font-semibold text-white mb-4">VFX & Compositing</h3>
                     <div class="space-y-3">
-                        <a href="https://www.youtube.com/c/CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
+                        <a href="https://www.youtube.com/@CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
                         <a href="https://www.videocopilot.net/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Video Copilot</a>
-                        <a href="https://www.youtube.com/c/BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
+                        <a href="https://www.youtube.com/@BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
                         <a href="https://www.actionvfx.com/blog" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ActionVFX Blog</a>
                         <a href="https://www.thegnomonworkshop.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">The Gnomon Workshop</a>
                         <a href="https://aescripts.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">aescripts + aeplugins</a>
@@ -257,13 +446,14 @@
                 <div>
                     <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
                     <div class="space-y-3">
-                        <a href="https://www.youtube.com/c/UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
-                        <a href="https://www.youtube.com/c/Unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
-                        <a href="https://www.youtube.com/c/Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
+                        <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
+                        <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
+                        <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
                         <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
-                        <a href="https://www.youtube.com/c/TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
+                        <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
                         <a href="https://huggingface.co/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Hugging Face (AI Models)</a>
                         <a href="https://www.coursera.org/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Coursera (Courses)</a>
+                        <a href="https://www.youtube.com/@cinifx-creation" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CINI FX Tutorials & More</a>
                     </div>
                 </div>
             </div>
@@ -272,7 +462,7 @@
         <section class="section-card text-center" data-section>
             <h2 class="text-3xl md:text-4xl text-gradient mb-8">Portfolio & Showreel</h2>
             <div class="video-container mx-auto mb-8 w-full max-w-3xl">
-                <iframe src="https://www.youtube.com/embed/YOUR_YOUTUBE_VIDEO_ID_HERE"
+                <iframe src="https://www.youtube.com/@CINIFX-CREATION"
                         title="CINI FX Showreel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen></iframe>
             </div>
@@ -297,7 +487,7 @@
                 </div>
                 <div class="flex justify-center md:justify-end">
                     <div class="profile-img w-[250px] h-[250px]">
-                        <img src="https://via.placeholder.com/250x250?text=Your+Profile+Image" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
+                        <img src="Cini.jpg" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
                     </div>
                 </div>
             </div>
@@ -306,36 +496,41 @@
         <section class="section-card" data-section>
             <h2 class="text-3xl md:text-4xl text-gradient mb-8 text-center">Connect & Support</h2>
             <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="text-left md:text-right">
+                <div class="text-left md:text-right connect-grid-content">
                     <h3 class="text-2xl font-semibold text-white mb-4">Get In Touch</h3>
                     <p class="text-lg text-zinc-300 mb-3 flex items-center justify-start md:justify-end space-x-3">
                         <strong class="text-white">Phone:</strong> <span>+91 82202 10538</span>
                     </p>
                     <p class="text-lg text-zinc-300 mb-6 flex items-center justify-start md:justify-end space-x-3">
-                            <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover:underline">cinifxmedia@gmail.com</a>
+                        <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover:underline">cinifxmedia@gmail.com</a>
                     </p>
                     <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Follow My Journey</h3>
-                    <div class="flex justify-start md:justify-end space-x-3">
+                    <div class="flex justify-start md:justify-end space-x-3 social-links-mobile-center">
                         <a href="https://www.instagram.com/ps_nagaprasath?igsh=MTBucW8wczNhYnM5aw==" target="_blank" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                         <a href="https://linkedin.com/in/p-nagaprasath-0b3a97349" target="_blank" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
                         <a href="https://chat.whatsapp.com/DUxvNDjLybIEhWHHXKZWvf" target="_blank" class="social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                         <a href="https://t.me/cinifxmedia" target="_blank" class="social-link" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
                     </div>
                 </div>
-                <div class="text-left border-t-2 md:border-t-0 md:border-l-2 border-zinc-800 pt-8 md:pt-0 md:pl-10">
+                <div class="text-left border-t-2 md:border-t-0 md:border-l-2 border-zinc-800 pt-8 md:pt-0 md:pl-10 connect-grid-content">
                     <h3 class="text-2xl font-semibold text-white mb-4">Support My Work</h3>
                     <p class="text-lg text-zinc-300 mb-4">
                         If you enjoy my content, please consider supporting my work. It helps me create more tutorials and creative projects!
                     </p>
                     <p class="text-lg text-zinc-300 mb-2">You can support me via UPI:</p>
                     <p class="text-xl font-bold text-white mb-4">
-                        <span class="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-700">nagaprasath24-1@okhdfcbank</span>
+                        <a href="upi://pay?pa=nagaprasath24-1@okhdfcbank&pn=Nagaprasath&cu=INR" class="upi-link">
+                            <span class="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-700">nagaprasath24-1@okhdfcbank</span>
+                        </a>
+                    </p>
+                    <p class="text-xs text-zinc-600 mt-2">
+                        (Clicking on the UPI ID may open your preferred UPI app on mobile devices.)
                     </p>
                 </div>
             </div>
         </section>
 
-    </main>
+        </main>
 
     <footer class="text-center py-8 px-4 text-zinc-600 text-sm mt-auto">
         © <span id="current-year">2025</span> CINI FX | Created by Nagaprasath | All rights reserved.
@@ -351,10 +546,10 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-revealed');
-                    // Add staggered animation to child elements (h2, h3, p, buttons)
-                    const children = entry.target.querySelectorAll('h2, h3, p, .btn-primary');
+                    // Add staggered animation to child elements (h2, h3, p, buttons, service items)
+                    const children = entry.target.querySelectorAll('h2, h3, p, .btn-primary, .social-login-button, .service-item');
                     children.forEach((child, index) => {
-                        child.style.animationDelay = `${0.2 + index * 0.1}s`;
+                        child.style.animationDelay = `${0.2 + index * 0.08}s`; // Slightly faster stagger
                     });
                     observer.unobserve(entry.target);
                 }
@@ -485,6 +680,15 @@
         if(document.getElementById('quiz-container')) {
             loadQuestion();
         }
+
+        // --- Simulated Login Logic (NOT SECURE!) ---
+        function simulateLogin(provider) {
+            alert(`Simulating login with ${provider}. This is a demonstration only. Real login requires a backend!`);
+            // In a real application, after a successful backend authentication,
+            // you would redirect the user.
+            window.location.href = "after_login.html"; // Redirect to a dummy "next page"
+        }
     </script>
 </body>
 </html>
+```
