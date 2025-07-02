@@ -208,7 +208,7 @@
                     <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
                     <div class="space-y-3">
                         <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
-                        <a href="https://www.youtube.com/@Unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
+                        <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
                         <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
                         <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
                         <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
@@ -247,14 +247,14 @@
                 </div>
                 <div class="flex justify-center md:justify-end">
                     <div class="profile-img w-[250px] h-[250px]">
-                        <img src="IMAGE.jpg" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
+                        <img src="YOUR_IMAGE_PATH_HERE.jpg" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="section-card text-center" data-section>
-            <h2 class="text-3xl md:text-4xl text-gradient mb-8">Connect & Support</h2>
+        <section class="section-card" data-section>
+            <h2 class="text-3xl md:text-4xl text-gradient mb-8 text-center">Connect & Support</h2>
             <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="text-left md:text-right">
                     <h3 class="text-2xl font-semibold text-white mb-4">Get In Touch</h3>
@@ -330,7 +330,7 @@
         const restartButton = document.getElementById('restart-button');
 
         function loadQuestion() {
-            if (!questionText) return; 
+            if (!questionText) return; // Exit if quiz elements are not found
             
             answered = false;
             feedbackArea.classList.add('hidden');
