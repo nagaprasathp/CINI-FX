@@ -3,697 +3,821 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CINI FX - Nagaprasath's Portfolio</title>
+    <title>CINI FX - Login & Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        /* --- Keyframe Animations --- */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes bounceEffect {
-            0%, 100% { transform: translateY(0) scale(1.0); }
-            50% { transform: translateY(-8px) scale(1.1); }
-        }
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* --- General & Animation Styles --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceEffect { 0%, 100% { transform: translateY(0) scale(1.0); } 50% { transform: translateY(-8px) scale(1.1); } }
+        @keyframes textFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* --- New Luma Labs Inspired Minimalist Theme --- */
         :root {
             --background: #000000;
             --foreground: #ffffff;
-            --subtle-gray: #a1a1aa; /* zinc-400 */
-            --card-bg: #18181b; /* zinc-900 */
+            --subtle-gray: #a1a1aa;
+            --card-bg: #18181b;
             --border-color: rgba(255, 255, 255, 0.1);
+            --primary-blue: #007bff;
+            --accent-glow: #00c6ff;
+            --text-color: #c9d1d9;
+            --login-form-bg: #161b22;
         }
-
-        body {
-            font-family: 'General Sans', sans-serif;
-            background-color: var(--background);
-            color: var(--subtle-gray);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        body, html {
+            margin: 0; padding: 0; height: 100%; font-family: 'General Sans', sans-serif;
+            background-color: var(--background); color: var(--subtle-gray);
             overflow-x: hidden;
-            animation: fadeIn 1s ease-out;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-        .section-card {
-            background-color: var(--card-bg);
-            border-radius: 1.5rem;
-            padding: 3rem;
-            margin-bottom: 3.5rem;
-            box-shadow: none;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            opacity: 0;
-            transform: translateY(30px);
-            border: 1px solid var(--border-color);
-        }
-        .section-card.is-revealed {
-            animation: slideInUp 0.8s ease-out forwards;
-        }
-        .section-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Subtle lift effect */
-        }
-        
-        /* Apply textFadeIn to main titles within sections */
-        .section-card.is-revealed h2,
-        .section-card.is-revealed h3,
-        .section-card.is-revealed p,
-        .section-card.is-revealed .btn-primary,
-        .section-card.is-revealed .social-login-button,
-        .section-card.is-revealed .service-item { /* Added service-item */
-            animation: textFadeIn 0.8s ease-out forwards;
-            opacity: 0; /* Start hidden */
-        }
-        /* Stagger animation for elements within revealed sections */
-        .section-card.is-revealed h2 { animation-delay: 0.2s; }
-        .section-card.is-revealed h3 { animation-delay: 0.3s; }
-        .section-card.is-revealed p { animation-delay: 0.4s; }
-        .section-card.is-revealed .btn-primary { animation-delay: 0.5s; }
-        .section-card.is-revealed .social-login-button { animation-delay: 0.6s; }
-        .section-card.is-revealed .service-item { animation-delay: 0.5s; } /* Stagger for service items */
 
-
-        /* --- Typography & Title Styles --- */
-        .main-title {
-            color: var(--foreground);
-            letter-spacing: -0.05em;
-        }
-        .text-gradient { /* Re-purposed for subtle headings */
-            color: var(--foreground);
-            font-weight: 600;
-        }
-        .strong-accent {
-            color: var(--foreground);
-            font-weight: 500;
-        }
-        
-        /* --- UI Element Styles --- */
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: var(--foreground);
-            color: var(--background); 
-            padding: 1rem 2.25rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease-out;
-            border: 1px solid var(--foreground);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        .btn-primary:hover {
-            background: var(--background);
-            color: var(--foreground);
-            transform: translateY(-3px) scale(1.02); /* Slight lift and scale */
-            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
-        }
-        .quiz-option-btn {
-            background-color: var(--card-bg);
-            color: var(--subtle-gray);
-            padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            text-align: left;
+        /* Page Management */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-out;
+            transition: opacity 0.5s ease;
+        }
+        .page.hidden {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #portfolio-page {
+            flex-direction: column;
+            overflow-y: auto;
+            align-items: stretch;
+            display: none;
+            padding-top: 5rem;
+        }
+
+        /* Login & Signup Page Styles */
+        .login-card {
+            background-color: var(--login-form-bg);
+            padding: 2.5rem 3rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            text-align: center;
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 450px;
         }
-        .quiz-option-btn:hover {
-            background-color: var(--foreground);
-            border-color: var(--foreground);
-            color: var(--background);
-            transform: scale(1.02); /* Subtle scale on hover */
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: white; letter-spacing: -1px; text-shadow: 0 0 10px rgba(0, 198, 255, 0.2); }
+        .subtitle { font-size: 1rem; color: var(--text-color); margin-bottom: 2rem; }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-color); font-weight: 500; }
+        .input-group input {
+            width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border-color);
+            background-color: #0d1117; color: white; font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
+        .input-group input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); }
+        .login-button {
+            width: 100%; padding: 1rem; border: none; border-radius: 8px;
+            background-color: var(--primary-blue); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .login-button:hover { background-color: #0056b3; transform: translateY(-2px); }
+        .links { margin-top: 1.5rem; font-size: 0.9rem; }
+        .links a { color: var(--primary-blue); text-decoration: none; transition: color 0.3s; }
+        .links a:hover { color: var(--accent-glow); }
+        #login-canvas, #signup-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        
+        /* Portfolio Page Styles */
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .section-card {
+            background-color: var(--card-bg); border-radius: 1.5rem; padding: 3rem; margin-bottom: 3.5rem;
+            box-shadow: none; transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0; transform: translateY(30px); border: 1px solid var(--border-color);
+        }
+        .section-card.is-revealed { animation: slideInUp 0.8s ease-out forwards; }
+        .section-card:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+        .section-card.is-revealed h2, .section-card.is-revealed h3, .section-card.is-revealed p, .section-card.is-revealed .btn-primary, .section-card.is-revealed .social-login-button, .section-card.is-revealed .service-item {
+            animation: textFadeIn 0.8s ease-out forwards; opacity: 0;
+        }
+        .section-card.is-revealed h2 { animation-delay: 0.2s; } .section-card.is-revealed h3 { animation-delay: 0.3s; } .section-card.is-revealed p { animation-delay: 0.4s; }
+        .main-title { color: var(--foreground); letter-spacing: -0.05em; }
+        .text-gradient { color: var(--foreground); font-weight: 600; }
+        .strong-accent { color: var(--foreground); font-weight: 500; }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.75rem; background: var(--foreground); color: var(--background); 
+            padding: 1rem 2.25rem; border-radius: 50px; font-weight: 600; text-decoration: none;
+            transition: all 0.3s ease-out; border: 1px solid var(--foreground); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .btn-primary:hover { background: var(--background); color: var(--foreground); transform: translateY(-3px) scale(1.02); box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); }
+        .social-login-button {
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease-in-out;
+            border: 1px solid transparent; color: var(--foreground); background-color: var(--card-bg);
+        }
+        .social-login-button.google { border-color: #db4437; color: #db4437; }
+        .social-login-button.google:hover { background-color: #db4437; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(219, 68, 55, 0.3); }
+        .profile-img { border-radius: 50%; border: 2px solid var(--border-color); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
+        .profile-img:hover { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 255, 255, 0.1); }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.25rem; background-color: #111; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .social-link {
+            display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%;
+            background-color: var(--card-bg); color: var(--subtle-gray); font-size: 1.25rem;
+            border: 1px solid var(--border-color); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .social-link:hover { animation: bounceEffect 0.6s ease-in-out; background: var(--foreground); color: var(--background); box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15); }
+        .upi-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--foreground); font-weight: 700; text-decoration: none; transition: color 0.3s ease; }
+        .upi-link:hover { color: #6ee7b7; text-decoration: underline; }
+        .service-item {
+            background-color: #1f1f22; border-radius: 0.75rem; padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+        .service-item:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); }
+        .service-icon { font-size: 2.5rem; color: var(--foreground); margin-bottom: 1rem; transition: color 0.3s ease; }
+        .service-item:hover .service-icon { color: #6ee7b7; }
+        #threejs-canvas { width: 100%; height: 400px; border-radius: 1rem; background: #111; cursor: grab; transition: box-shadow 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); }
+        #threejs-canvas:active { cursor: grabbing; }
+
+        .quiz-option-btn { background-color: var(--card-bg); color: var(--subtle-gray); padding: 1rem 1.25rem; border-radius: 0.75rem; text-align: left; width: 100%; border: 1px solid var(--border-color); transition: all 0.2s ease-in-out; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        .quiz-option-btn:hover { background-color: var(--foreground); border-color: var(--foreground); color: var(--background); transform: scale(1.02); box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); }
         .quiz-option-btn.correct { background-color: #16a34a; border-color: #22c55e; color: #ffffff; font-weight: 700; transform: scale(1.03); }
         .quiz-option-btn.incorrect { background-color: #dc2626; border-color: #ef4444; color: #ffffff; font-weight: 700; transform: scale(0.98); }
         .hidden { display: none; }
-        .profile-img {
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            transition: transform 0.3s ease-in-out;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); /* Soft glow */
-        }
-        .profile-img:hover { 
-            transform: scale(1.08); /* More pronounced scale */
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-        }
-        .video-container {
-            position: relative; width: 100%; padding-bottom: 56.25%; height: 0;
-            overflow: hidden; border-radius: 1.25rem;
-            background-color: #111;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Deep shadow */
-        }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .social-link {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 48px; height: 48px; border-radius: 50%;
-            background-color: var(--card-bg); color: var(--subtle-gray);
-            font-size: 1.25rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .social-link:hover {
-            animation: bounceEffect 0.6s ease-in-out; /* Apply bounce animation */
-            background: var(--foreground);
-            color: var(--background);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
-        }
         
-        /* New style for the UPI link */
-        .upi-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--foreground);
-            font-weight: 700;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .upi-link:hover {
-            color: #6ee7b7; /* A subtle green from Tailwind's emerald-300 for emphasis */
-            text-decoration: underline;
-        }
-
-        /* Styles for social login buttons */
-        .social-login-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 0.8rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease-in-out;
-            border: 1px solid transparent;
-            color: var(--foreground); /* Default text color */
-            background-color: var(--card-bg); /* Default background */
-        }
-        .social-login-button i {
-            font-size: 1.5rem;
-        }
-
-        .social-login-button.google {
-            border-color: #db4437; /* Google red */
-        }
-        .social-login-button.google:hover {
-            background-color: #db4437;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(219, 68, 55, 0.3);
-        }
-
-        .social-login-button.github {
-            border-color: #333; /* GitHub dark gray */
-        }
-        .social-login-button.github:hover {
-            background-color: #333;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(51, 51, 51, 0.3);
-        }
-
-        .social-login-button.facebook {
-            border-color: #1877f2; /* Facebook blue */
-        }
-        .social-login-button.facebook:hover {
-            background-color: #1877f2;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
-        }
-
-        .social-login-button.instagram {
-            border-color: #c13584; /* Instagram gradient-ish */
-        }
-        .social-login-button.instagram:hover {
-            background-color: #c13584;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(193, 53, 132, 0.3);
-        }
-
-        /* Styling for the services section */
-        .service-item {
-            background-color: #1f1f22; /* Slightly lighter card background */
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-        }
-
-        .service-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .service-icon {
-            font-size: 2.5rem;
-            color: var(--foreground);
-            margin-bottom: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .service-item:hover .service-icon {
-            color: #6ee7b7; /* Highlight icon on hover */
-        }
-
-        /* Responsive adjustments */
         @media (max-width: 767px) {
-            .section-card {
-                padding: 1.5rem;
-                margin-bottom: 2.5rem;
-                border-radius: 1.25rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            .main-title {
-                font-size: 3.5rem; /* Further adjusted for very small screens */
-            }
-            .text-xl.md\:text-2xl {
-                font-size: 1.125rem; /* text-xl */
-            }
-            .text-3xl.md\:text-4xl {
-                font-size: 2rem; /* text-3xl */
-            }
-            .btn-primary {
-                padding: 0.8rem 1.8rem;
-                font-size: 0.9rem;
-            }
-            .profile-img {
-                width: 180px;
-                height: 180px;
-            }
-            .about-grid { /* Revert to single column on small screens */
-                grid-template-columns: 1fr;
-            }
-            .connect-grid-content.text-left.md\:text-right {
-                text-align: left; /* Ensure left alignment on mobile */
-            }
-            .connect-grid-content.text-left.md\:border-t-0 {
-                border-top: 2px solid var(--zinc-800);
-                padding-top: 2rem;
-                margin-top: 2rem;
-                padding-left: 0; /* Remove desktop padding */
-            }
-            .social-links-mobile-center {
-                justify-content: center; /* Center social links on mobile */
-            }
-            .social-login-button {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-            .social-login-button i {
-                font-size: 1.25rem;
-            }
+            .section-card { padding: 1.5rem; margin-bottom: 2.5rem; border-radius: 1.25rem; }
+            .container { padding: 1rem; }
+            .main-title { font-size: 3.5rem; }
+            .text-xl.md\:text-2xl { font-size: 1.125rem; }
+            .text-3xl.md\:text-4xl { font-size: 2rem; }
+            .btn-primary { padding: 0.8rem 1.8rem; font-size: 0.9rem; }
+            .profile-img { width: 180px; height: 180px; }
+            .about-grid { grid-template-columns: 1fr; }
         }
         @media (min-width: 768px) {
-            .main-title {
-                font-size: 9rem; /* text-9xl */
-            }
-            .text-xl.md\:text-2xl {
-                font-size: 1.5rem; /* text-2xl */
-            }
-            .text-3xl.md\:text-4xl {
-                font-size: 2.25rem; /* text-4xl */
-            }
+            .main-title { font-size: 9rem; }
+            .text-xl.md\:text-2xl { font-size: 1.5rem; }
+            .text-3xl.md\:text-4xl { font-size: 2.25rem; }
             .about-grid { grid-template-columns: 1fr 250px; }
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="text-center py-16 md:py-24 px-4">
-        <h1 class="text-7xl md:text-9xl font-bold main-title mb-4">CINI FX CREATION</h1>
-        <p class="text-xl md:text-2xl font-light text-zinc-400">"Where Ideas Spark and Dreams Ignite."</p>
-    </header>
-
-    <main class="container">
-        <section class="section-card text-center" data-section>
-            <h2 class="text-3xl md:text-4xl text-gradient mb-6">Welcome to CINI FX!</h2>
-            <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto mb-4">
-                Dive deep into the enchanting world of cinema, mesmerizing VFX, and thrilling games with us. At CINI FX, we celebrate the magic of movies, unravel the secrets behind stunning visual effects, and explore the exciting realms of gaming. Whether you're a film fanatic, a VFX enthusiast, or a gaming guru, we've got something for you.
+    <div id="login-page" class="page">
+        <canvas id="login-canvas"></canvas>
+        <div class="login-card">
+            <h1>CINI FX</h1>
+            <p class="subtitle">Log in to view the portfolio.</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-button">Log In</button>
+            </form>
+            <div class="links">
+                <a href="#" id="google-login">Sign in with Google</a>
+            </div>
+            <p class="links mt-4">
+                Don't have an account? <a href="#" id="show-signup">Sign Up</a>
             </p>
-            <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto">
-                Subscribe and join the CINI FX community today!
-            </p>
-            <a href="https://www.youtube.com/@CINIFX-CREATION" target="_blank" class="btn-primary mt-8">
-                <i class="fa-brands fa-youtube"></i> Visit My YouTube Channel
-            </a>
-        </section>
-        
-        <section class="section-card" data-section>
-            <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Services I Offer</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="service-item">
-                    <i class="fas fa-video service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">Video Editing</h3>
-                    <p class="text-sm text-zinc-400">Professional video editing for various platforms, from short films to social media content.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-camera-retro service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">Event Photography</h3>
-                    <p class="text-sm text-zinc-400">Capturing memorable moments from events, ensuring high-quality and dynamic visuals.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-calendar-check service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">Event Managing</h3>
-                    <p class="text-sm text-zinc-400">From concept to execution, I can help manage your events, ensuring smooth operation.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-laptop-code service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">Website Making</h3>
-                    <p class="text-sm text-zinc-400">Creating responsive and modern websites tailored to your needs, just like this one!</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-magic service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">VFX (Visual Effects)</h3>
-                    <p class="text-sm text-zinc-400">Adding stunning visual effects to your projects, bringing imagination to life.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-running service-icon"></i>
-                    <h3 class="text-xl font-semibold text-white mb-2">Animation</h3>
-                    <p class="text-sm text-zinc-400">Bringing characters and stories to life through dynamic 2D and 3D animation.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="container">
-
-
-        <section class="section-card" data-section>
-            <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-4 text-center">Tech & Creative Quiz</h2>
-            <div id="quiz-container" class="bg-black/20 p-6 sm:p-8 rounded-lg">
-                <div id="question-area">
-                    <p class="text-xl font-medium mb-6 text-center text-zinc-300" id="question-text"></p>
-                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    </div>
-                </div>
-                <div id="feedback-area" class="text-center mt-6 text-xl font-medium hidden"></div>
-                <div class="flex justify-center mt-8">
-                    <button id="restart-button" class="btn-primary hidden">Restart Quiz</button>
-                </div>
-            </div>   
-  </section>
-
-            <section>
-  
-                 <section class="container">
-                    <section class="section-card" data-section>
-                        <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">        
-        <div>
-            <h3 class="text-xl font-semibold text-white mb-4">3D & Animation</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@BlenderGuru" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
-                <a href="https://www.youtube.com/channel/UCbmxZRQk-X0p-TOxd6PEYJA" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
-                <a href="https://www.youtube.com/@CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
-                <a href="https://www.youtube.com/@Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
-                <a href="https://www.youtube.com/@Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
-                <a href="https://polyhaven.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Poly Haven (Assets)</a>
-                <a href="https://www.artstation.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ArtStation (Inspiration)</a>
-            </div>
-        </div>
-        <div>
-
-            <h3 class="text-xl font-semibold text-white mb-4">VFX & Compositing</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
-                <a href="https://www.videocopilot.net/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Video Copilot</a>
-                <a href="https://www.youtube.com/@BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
-                <a href="https://www.actionvfx.com/blog" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ActionVFX Blog</a>
-                <a href="https://www.thegnomonworkshop.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">The Gnomon Workshop</a>
-                <a href="https://aescripts.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">aescripts + aeplugins</a>
-                <a href="https://www.foundry.com/products/nuke-family/nuke-non-commercial" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Nuke Non-Commercial</a>
-            </div>
-        </div>
-        <div>
-            <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
-                <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
-                <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
-                <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
-                <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
-                <a href="https://huggingface.co/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Hugging Face (AI Models)</a>
-                <a href="https://www.coursera.org/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Coursera (Courses)</a>
-            </div>
         </div>
     </div>
-</section>
-</section>
-        <section class="section-card text-center" data-section>
-            <h2 class="text-3xl md:text-4xl text-gradient mb-8">Portfolio & Showreel</h2>
-            <div class="video-container mx-auto mb-8 w-full max-w-3xl">
-                <iframe src="https://www.youtube.com/@CINIFX-CREATION"
-                        title="CINI FX Showreel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
-            </div>
-            <a href="https://drive.google.com/drive/folders/YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE" target="_blank" class="btn-primary">
-                <i class="fa-solid fa-download"></i> Download My Portfolio
-            </a>
-            <p class="text-xs text-zinc-600 mt-4">
-                (Please replace the **YouTube embed link** and **Google Drive portfolio link** with your actual content. For YouTube, find the "embed" code and copy the `src` URL. For Google Drive, get a shareable link to your portfolio folder.)
+
+    <!-- New Signup Page -->
+    <div id="signup-page" class="page hidden">
+        <canvas id="signup-canvas"></canvas>
+        <div class="login-card">
+            <h1>CINI FX</h1>
+            <p class="subtitle">Create a new account.</p>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-email">Email address</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Create Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <button type="submit" class="login-button">Sign Up</button>
+            </form>
+            <p class="links mt-4">
+                Already have an account? <a href="#" id="show-login">Log In</a>
             </p>
-        </section>
+        </div>
+    </div>
 
-        <section class="section-card" data-section>
-            <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 items-center about-grid">
-                <div>
-                    <h2 class="text-3xl md:text-4xl text-gradient mb-4">About Me</h2>
-                    <p class="text-lg text-zinc-300 leading-relaxed mb-4">
-                        My name is <strong class="strong-accent">Nagaprasath</strong>. I am a passionate creator and student of <strong class="strong-accent">VFX and Animation</strong> at Rathinam College of Arts and Science in Coimbatore.
-                    </p>
-                    <p class="text-lg text-zinc-300 leading-relaxed mt-4">
-                        Through my YouTube channel, <strong class="strong-accent">CINI FX</strong>, I share my journey in digital media. I create tutorials, showreels, and creative experiments to help others learn and grow their skills in the exciting world of VFX, game development, and AI-powered content creation. I aim to demystify complex techniques and inspire fellow enthusiasts to explore their own creative potential.
-                    </p>
+    <div id="portfolio-page" class="page hidden">
+        <header class="text-center py-16 md:py-24 px-4">
+            <h1 class="text-7xl md:text-9xl font-bold main-title mb-4">CINI FX CREATION</h1>
+            <p class="text-xl md:text-2xl font-light text-zinc-400">"Where Ideas Spark and Dreams Ignite."</p>
+        </header>
+        <main class="container">
+            <section class="section-card text-center" data-section>
+                <h2 class="text-3xl md:text-4xl text-gradient mb-6">Welcome to CINI FX!</h2>
+                <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto mb-4">
+                    Dive deep into the enchanting world of cinema, mesmerizing VFX, and thrilling games with us. At CINI FX, we celebrate the magic of movies, unravel the secrets behind stunning visual effects, and explore the exciting realms of gaming. Whether you're a film fanatic, a VFX enthusiast, or a gaming guru, we've got something for you.
+                </p>
+                <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto">
+                    Subscribe and join the CINI FX community today!
+                </p>
+                <a href="https://www.youtube.com/@CINIFX-CREATION" target="_blank" class="btn-primary mt-8">
+                    <i class="fa-brands fa-youtube"></i> Visit My YouTube Channel
+                </a>
+            </section>
+            
+            <section class="section-card" data-section>
+                <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Interactive 3D Showcase</h2>
+                <div class="relative w-full aspect-[16/9] max-w-4xl mx-auto">
+                    <canvas id="threejs-canvas"></canvas>
                 </div>
-                <div class="flex justify-center md:justify-end">
-                    <div class="profile-img w-[250px] h-[250px]">
-                        <img src="Cini.jpg" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
+                <p class="text-center mt-6 text-lg text-zinc-400">
+                    A simple animated 3D cube created with Three.js. You can drag and rotate it!
+                </p>
+            </section>
+            
+            <section class="section-card" data-section>
+                <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Services I Offer</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="service-item">
+                        <i class="fas fa-video service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Video Editing</h3>
+                        <p class="text-sm text-zinc-400">Professional video editing for various platforms, from short films to social media content.</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-camera-retro service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Event Photography</h3>
+                        <p class="text-sm text-zinc-400">Capturing memorable moments from events, ensuring high-quality and dynamic visuals.</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-calendar-check service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Event Managing</h3>
+                        <p class="text-sm text-zinc-400">From concept to execution, I can help manage your events, ensuring smooth operation.</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-laptop-code service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Website Making</h3>
+                        <p class="text-sm text-zinc-400">Creating responsive and modern websites tailored to your needs, just like this one!</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-magic service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">VFX (Visual Effects)</h3>
+                        <p class="text-sm text-zinc-400">Adding stunning visual effects to your projects, bringing imagination to life.</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-running service-icon"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Animation</h3>
+                        <p class="text-sm text-zinc-400">Bringing characters and stories to life through dynamic 2D and 3D animation.</p>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section-card" data-section>
-            <h2 class="text-3xl md:text-4xl text-gradient mb-8 text-center">Connect & Support</h2>
-            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="text-left md:text-right connect-grid-content">
-                    <h3 class="text-2xl font-semibold text-white mb-4">Get In Touch</h3>
-                    <p class="text-lg text-zinc-300 mb-3 flex items-center justify-start md:justify-end space-x-3">
-                        <strong class="text-white">Phone:</strong> <span>+91 82202 10538</span>
-                    </p>
-                    <p class="text-lg text-zinc-300 mb-6 flex items-center justify-start md:justify-end space-x-3">
-                        <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover:underline">cinifxmedia@gmail.com</a>
-                    </p>
-                    <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Follow My Journey</h3>
-                    <div class="flex justify-start md:justify-end space-x-3 social-links-mobile-center">
-                        <a href="https://www.instagram.com/_ps_nagaprasath_/" target="_blank" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://linkedin.com/in/p-nagaprasath-0b3a97349" target="_blank" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="https://chat.whatsapp.com/DUxvNDjLybIEhWHHXKZWvf" target="_blank" class="social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="https://t.me/cinifxmedia" target="_blank" class="social-link" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <section class="section-card" data-section>
+                <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-4 text-center">Tech & Creative Quiz</h2>
+                <div id="quiz-container" class="bg-black/20 p-6 sm:p-8 rounded-lg">
+                    <div id="question-area">
+                        <p class="text-xl font-medium mb-6 text-center text-zinc-300" id="question-text"></p>
+                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                    <div id="feedback-area" class="text-center mt-6 text-xl font-medium hidden"></div>
+                    <div class="flex justify-center mt-8">
+                        <button id="restart-button" class="btn-primary hidden">Restart Quiz</button>
+                    </div>
+                </div> 
+            </section>
+
+            <section class="section-card" data-section>
+                <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">3D & Animation</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@BlenderGuru" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
+                            <a href="https://www.youtube.com/channel/UCbmxZRQk-X0p-TOxd6PEYJA" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
+                            <a href="https://www.youtube.com/@CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
+                            <a href="https://www.youtube.com/@Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
+                            <a href="https://www.youtube.com/@Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
+                            <a href="https://polyhaven.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Poly Haven (Assets)</a>
+                            <a href="https://www.artstation.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ArtStation (Inspiration)</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">VFX & Compositing</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
+                            <a href="https://www.videocopilot.net/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Video Copilot</a>
+                            <a href="https://www.youtube.com/@BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
+                            <a href="https://www.actionvfx.com/blog" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ActionVFX Blog</a>
+                            <a href="https://www.thegnomonworkshop.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">The Gnomon Workshop</a>
+                            <a href="https://aescripts.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Nuke Non-Commercial</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
+                            <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
+                            <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
+                            <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
+                            <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
+                            <a href="https://huggingface.co/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Hugging Face (AI Models)</a>
+                            <a href="https://www.coursera.org/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Coursera (Courses)</a>
+                        </div>
                     </div>
                 </div>
-                <div class="text-left border-t-2 md:border-t-0 md:border-l-2 border-zinc-800 pt-8 md:pt-0 md:pl-10 connect-grid-content">
-                    <h3 class="text-2xl font-semibold text-white mb-4">Support My Work</h3>
-                    <p class="text-lg text-zinc-300 mb-4">
-                        If you enjoy my content, please consider supporting my work. It helps me create more tutorials and creative projects!
-                    </p>
-                    <p class="text-lg text-zinc-300 mb-2">You can support me via UPI:</p>
-                    <p class="text-xl font-bold text-white mb-4">
-                        <a href="upi://pay?pa=nagaprasath24-1@okhdfcbank&pn=Nagaprasath&cu=INR" class="upi-link">
-                            <span class="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-700">nagaprasath24-1@okhdfcbank</span>
-                        </a>
-                    </p>
-                    <p class="text-xs text-zinc-600 mt-2">
-                        (Clicking on the UPI ID may open your preferred UPI app on mobile devices.)
-                    </p>
+            </section>
+            
+            <section class="section-card text-center" data-section>
+                <h2 class="text-3xl md:text-4xl text-gradient mb-8">Portfolio & Showreel</h2>
+                <div class="video-container mx-auto mb-8 w-full max-w-3xl">
+                    <iframe id="youtube-embed" src="https://www.youtube.com/embed/?list=PLQ8_e38B-Q-3j9WkHq-bX5i5lGzS_L0l9"
+                            title="CINI FX Showreel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
                 </div>
-            </div>
-        </section>
+                <a href="https://drive.google.com/drive/folders/YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE" target="_blank" class="btn-primary">
+                    <i class="fa-solid fa-download"></i> Download My Portfolio
+                </a>
+                <p class="text-xs text-zinc-600 mt-4">
+                    (Please replace the **YouTube embed link** and **Google Drive portfolio link** with your actual content. For YouTube, find the "embed" code and copy the `src` URL. For Google Drive, get a shareable link to your portfolio folder.)
+                </p>
+            </section>
 
+            <section class="section-card" data-section>
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 items-center about-grid">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl text-gradient mb-4">About Me</h2>
+                        <p class="text-lg text-zinc-300 leading-relaxed mb-4">
+                            My name is <strong class="strong-accent">Nagaprasath</strong>. I am a passionate creator and student of <strong class="strong-accent">VFX and Animation</strong> at Rathinam College of Arts and Science in Coimbatore.
+                        </p>
+                        <p class="text-lg text-zinc-300 leading-relaxed mt-4">
+                            Through my YouTube channel, <strong class="strong-accent">CINI FX</strong>, I share my journey in digital media. I create tutorials, showreels, and creative experiments to help others learn and grow their skills in the exciting world of VFX, game development, and AI-powered content creation. I aim to demystify complex techniques and inspire fellow enthusiasts to explore their own creative potential.
+                        </p>
+                    </div>
+                    <div class="flex justify-center md:justify-end">
+                        <div class="profile-img w-[250px] h-[250px]">
+                            <img src="Cini.jpg" alt="Nagaprasath Profile" class="w-full h-full object-cover rounded-full">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" data-section>
+                <h2 class="text-3xl md:text-4xl text-gradient mb-8 text-center">Connect & Support</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="text-left md:text-right connect-grid-content">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Get In Touch</h3>
+                        <p class="text-lg text-zinc-300 mb-3 flex items-center justify-start md:justify-end space-x-3">
+                            <strong class="text-white">Phone:</strong> <span>+91 82202 10538</span>
+                        </p>
+                        <p class="text-lg text-zinc-300 mb-6 flex items-center justify-start md:justify-end space-x-3">
+                            <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover:underline">cinifxmedia@gmail.com</a>
+                        </p>
+                        <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Follow My Journey</h3>
+                        <div class="flex justify-start md:justify-end space-x-3 social-links-mobile-center">
+                            <a href="https://www.instagram.com/_ps_nagaprasath_/" target="_blank" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="https://linkedin.com/in/p-nagaprasath-0b3a97349" target="_blank" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="https://chat.whatsapp.com/DUxvNDjLybIEhWHHXKZWvf" target="_blank" class="social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://t.me/cinifxmedia" target="_blank" class="social-link" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-left border-t-2 md:border-t-0 md:border-l-2 border-zinc-800 pt-8 md:pt-0 md:pl-10 connect-grid-content">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Support My Work</h3>
+                        <p class="text-lg text-zinc-300 mb-4">
+                            If you enjoy my content, please consider supporting my work. It helps me create more tutorials and creative projects!
+                        </p>
+                        <p class="text-lg text-zinc-300 mb-2">You can support me via UPI:</p>
+                        <p class="text-xl font-bold text-white mb-4">
+                            <a href="upi://pay?pa=nagaprasath24-1@okhdfcbank&pn=Nagaprasath&cu=INR" class="upi-link">
+                                <span class="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-700">nagaprasath24-1@okhdfcbank</span>
+                            </a>
+                        </p>
+                        <p class="text-xs text-zinc-600 mt-2">
+                            (Clicking on the UPI ID may open your preferred UPI app on mobile devices.)
+                        </p>
+                    </div>
+                </div>
+            </section>
         </main>
-
-    <footer class="text-center py-8 px-4 text-zinc-600 text-sm mt-auto">
-        © <span id="current-year">2025</span> CINI FX | Created by Nagaprasath | All rights reserved.
-    </footer>
+        <footer class="text-center py-8 px-4 text-zinc-600 text-sm mt-auto">
+            © <span id="current-year-portfolio">2025</span> CINI FX | Created by Nagaprasath | All rights reserved.
+        </footer>
+    </div>
 
     <script>
-        // Set current year in footer
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('current-year-portfolio').textContent = new Date().getFullYear();
 
-        // Smooth Scroll Reveal for Sections
-        const revealSections = document.querySelectorAll('[data-section]');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-revealed');
-                    // Add staggered animation to child elements (h2, h3, p, buttons, service items)
-                    const children = entry.target.querySelectorAll('h2, h3, p, .btn-primary, .social-login-button, .service-item');
-                    children.forEach((child, index) => {
-                        child.style.animationDelay = `${0.2 + index * 0.08}s`; // Slightly faster stagger
-                    });
-                    observer.unobserve(entry.target);
+        const loginPage = document.getElementById('login-page');
+        const signupPage = document.getElementById('signup-page');
+        const portfolioPage = document.getElementById('portfolio-page');
+        const showSignupBtn = document.getElementById('show-signup');
+        const showLoginBtn = document.getElementById('show-login');
+        const googleLoginBtn = document.getElementById('google-login');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+
+        // Function to switch between pages with a fade effect
+        function switchPage(fromPage, toPage) {
+            fromPage.style.opacity = '0';
+            setTimeout(() => {
+                fromPage.classList.add('hidden');
+                toPage.classList.remove('hidden');
+                toPage.style.opacity = '1';
+                // If switching to the portfolio page, initialize scroll animations and 3D scene
+                if (toPage.id === 'portfolio-page') {
+                    setTimeout(initScrollAnimations, 100);
+                    setTimeout(initPortfolioThreeJS, 100);
+                }
+            }, 500);
+        }
+
+        // --- Event Listeners for Page Transitions ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, this is where you'd validate credentials and log the user in
+            // For now, it's a simulated success.
+            alert('Simulated Login Successful! Redirecting...');
+            switchPage(loginPage, portfolioPage);
+        });
+
+        googleLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // In a real app, this would redirect to Google's OAuth login page
+            // For now, it's a simulated success.
+            alert('Simulated Google Sign-In. Redirecting to portfolio page...');
+            switchPage(loginPage, portfolioPage);
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, this is where you'd send data to a server to create a new user
+            alert('Simulated Signup Successful! Redirecting to login page...');
+            switchPage(signupPage, loginPage);
+        });
+
+        showSignupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchPage(loginPage, signupPage);
+        });
+
+        showLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchPage(signupPage, loginPage);
+        });
+        
+        // --- Reusable Three.js Animation for Login/Signup Pages ---
+        function setupThreeJSAnimation(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0x00c6ff, 2, 500);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+
+            const geometry = new THREE.BufferGeometry();
+            const vertices = new Float32Array([
+                -2.0, 3.0, 0.0, 0.0, 1.0, 0.0,
+                2.0, 2.5, 0.0, 0.0, 1.0, 0.0,
+                0.0, 1.0, 0.0, 0.0, -1.0, 0.0,
+                0.0, -1.0, 0.0, 1.5, -3.0, 0.0,
+                0.0, -1.0, 0.0, -1.5, -3.0, 0.0
+            ]);
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            const material = new THREE.LineBasicMaterial({ color: 0x00c6ff, linewidth: 3, transparent: true, opacity: 0.7 });
+            const constellation = new THREE.LineSegments(geometry, material);
+            scene.add(constellation);
+
+            const particleCount = 2000;
+            const particlesGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const particleColors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+                const color = new THREE.Color();
+                color.setHSL(0.6, 0.8, 0.8);
+                particleColors[i * 3] = color.r; particleColors[i * 3 + 1] = color.g; particleColors[i * 3 + 2] = color.b;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true });
+            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+
+            camera.position.z = 5;
+
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            canvas.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
+            canvas.addEventListener('mouseup', () => { isDragging = false; });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaMove = { x: e.clientX - previousMousePosition.x, y: e.clientY - previousMousePosition.y };
+                constellation.rotation.y += deltaMove.x * 0.005;
+                constellation.rotation.x += deltaMove.y * 0.005;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+            
+            canvas.addEventListener('touchstart', (e) => { isDragging = true; previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; });
+            canvas.addEventListener('touchend', () => { isDragging = false; });
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const deltaMove = { x: e.touches[0].clientX - previousMousePosition.x, y: e.touches[0].clientY - previousMousePosition.y };
+                constellation.rotation.y += deltaMove.x * 0.005;
+                constellation.rotation.x += deltaMove.y * 0.005;
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (!isDragging) {
+                    constellation.rotation.y += 0.002;
+                }
+                particles.rotation.y -= 0.0005;
+                particles.rotation.x -= 0.0005;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Initialize login and signup animations on page load
+        setupThreeJSAnimation('login-canvas');
+        setupThreeJSAnimation('signup-canvas');
+
+
+        // --- Scroll Reveal for Portfolio Page ---
+        function initScrollAnimations() {
+            const revealSections = document.querySelectorAll('[data-section]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        const children = entry.target.querySelectorAll('h2, h3, p, .btn-primary, .social-login-button, .service-item');
+                        children.forEach((child, index) => {
+                            child.style.animationDelay = `${0.2 + index * 0.08}s`;
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            revealSections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // --- Three.js Showcase Logic (Three.js with Shaders) for Portfolio Page ---
+        function initPortfolioThreeJS() {
+            const portfolioCanvas = document.getElementById('threejs-canvas');
+            if (!portfolioCanvas) return;
+            
+            // Wait for the canvas to be visible and have dimensions
+            if (portfolioCanvas.clientWidth === 0 || portfolioCanvas.clientHeight === 0) {
+                 setTimeout(initPortfolioThreeJS, 50);
+                 return;
+            }
+
+            const scenePortfolio = new THREE.Scene();
+            const cameraPortfolio = new THREE.PerspectiveCamera(75, portfolioCanvas.clientWidth / portfolioCanvas.clientHeight, 0.1, 1000);
+            const rendererPortfolio = new THREE.WebGLRenderer({ canvas: portfolioCanvas, antialias: true, alpha: true });
+            rendererPortfolio.setSize(portfolioCanvas.clientWidth, portfolioCanvas.clientHeight);
+            rendererPortfolio.setClearColor(0x000000, 0);
+
+            const ambientLightPortfolio = new THREE.AmbientLight(0x404040, 2.5);
+            scenePortfolio.add(ambientLightPortfolio);
+            const pointLightPortfolio = new THREE.PointLight(0x6ee7b7, 5, 100);
+            pointLightPortfolio.position.set(5, 5, 5);
+            scenePortfolio.add(pointLightPortfolio);
+
+            const vertexShader = `
+                uniform float u_time;
+                varying vec3 vNormal;
+                varying vec3 vLight;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    vec3 displacedPosition = position;
+                    displacedPosition.x += sin(displacedPosition.y * 3.0 + u_time * 2.0) * 0.2;
+                    displacedPosition.z += cos(displacedPosition.x * 3.0 + u_time * 2.0) * 0.2;
+                    vec4 modelViewPosition = modelViewMatrix * vec4(displacedPosition, 1.0);
+                    gl_Position = projectionMatrix * modelViewPosition;
+                    vLight = normalize(u_lightPos - modelViewPosition.xyz);
+                }
+            `;
+            const fragmentShader = `
+                uniform float u_time;
+                uniform float u_mouse_state;
+                varying vec3 vNormal;
+                varying vec3 vLight;
+                void main() {
+                    vec3 normal = normalize(vNormal);
+                    vec3 light = normalize(vLight);
+                    vec3 reflected = reflect(light, normal);
+                    float reflectivity = max(0.0, dot(reflected, vec3(0.0, 0.0, 1.0)));
+                    float flowEffect = sin(u_time * 2.0 + normal.x * 5.0) * 0.2 + sin(u_time * 1.5 + normal.y * 5.0) * 0.3;
+                    reflectivity += flowEffect;
+                    vec3 baseColor = vec3(0.1, 0.8, 0.5);
+                    vec3 finalColor = baseColor * (reflectivity + 0.5);
+                    finalColor *= (1.0 + u_mouse_state * 0.2);
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            const uniforms = {
+                u_time: { type: 'f', value: 0.0 },
+                u_mouse: { type: 'v2', value: new THREE.Vector2() },
+                u_lightPos: { type: 'v3', value: pointLightPortfolio.position },
+                u_mouse_state: { type: 'f', value: 0.0 }
+            };
+            const materialPortfolio = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vertexShader, fragmentShader: fragmentShader });
+            const geometryPortfolio = new THREE.IcosahedronGeometry(1.5, 40);
+            const sculpture = new THREE.Mesh(geometryPortfolio, materialPortfolio);
+            scenePortfolio.add(sculpture);
+            cameraPortfolio.position.z = 4;
+
+            let isDraggingPortfolio = false;
+            let previousMousePositionPortfolio = { x: 0, y: 0 };
+            
+            portfolioCanvas.addEventListener('mousedown', function(e) {
+                isDraggingPortfolio = true;
+                uniforms.u_mouse_state.value = 1.0;
+                previousMousePositionPortfolio.x = e.clientX;
+                previousMousePositionPortfolio.y = e.clientY;
+            });
+
+            portfolioCanvas.addEventListener('mouseup', function() {
+                isDraggingPortfolio = false;
+                uniforms.u_mouse_state.value = 0.0;
+            });
+
+            portfolioCanvas.addEventListener('mousemove', function(e) {
+                if (isDraggingPortfolio) {
+                    const deltaMove = {
+                        x: e.clientX - previousMousePositionPortfolio.x,
+                        y: e.clientY - previousMousePositionPortfolio.y
+                    };
+                    const sensitivity = 0.005;
+                    sculpture.rotation.y += deltaMove.x * sensitivity;
+                    sculpture.rotation.x += deltaMove.y * sensitivity;
+                    previousMousePositionPortfolio.x = e.clientX;
+                    previousMousePositionPortfolio.y = e.clientY;
                 }
             });
-        }, {
-            threshold: 0.1
-        });
-        revealSections.forEach(section => {
-            observer.observe(section);
-        });
+            // Handle touch events
+            portfolioCanvas.addEventListener('touchstart', (e) => {
+                isDraggingPortfolio = true;
+                uniforms.u_mouse_state.value = 1.0;
+                previousMousePositionPortfolio = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            });
 
-        // --- Quiz Game Logic ---
+            portfolioCanvas.addEventListener('touchend', () => {
+                isDraggingPortfolio = false;
+                uniforms.u_mouse_state.value = 0.0;
+            });
+
+            portfolioCanvas.addEventListener('touchmove', (e) => {
+                if (!isDraggingPortfolio) return;
+                const deltaMove = {
+                    x: e.touches[0].clientX - previousMousePositionPortfolio.x,
+                    y: e.touches[0].clientY - previousMousePositionPortfolio.y
+                };
+                const sensitivity = 0.005;
+                sculpture.rotation.y += deltaMove.x * sensitivity;
+                sculpture.rotation.x += deltaMove.y * sensitivity;
+                previousMousePositionPortfolio = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            });
+
+            function animatePortfolio(time) {
+                requestAnimationFrame(animatePortfolio);
+                uniforms.u_time.value = time * 0.001;
+                if (!isDraggingPortfolio) {
+                    sculpture.rotation.y += 0.001;
+                    sculpture.rotation.x += 0.001;
+                    sculpture.rotation.z += 0.001;
+                }
+                rendererPortfolio.render(scenePortfolio, cameraPortfolio);
+            }
+            animatePortfolio();
+
+            window.addEventListener('resize', () => {
+                const parent = portfolioCanvas.parentElement;
+                rendererPortfolio.setSize(parent.clientWidth, parent.clientHeight);
+                cameraPortfolio.aspect = parent.clientWidth / parent.clientHeight;
+                cameraPortfolio.updateProjectionMatrix();
+            });
+        }
+
+
+        // --- Quiz Logic ---
         const quizQuestions = [
-            { question: "Which software is primarily used for 3D modeling and animation, known for its open-source nature?", options: ["Autodesk Maya", "Adobe After Effects", "Blender", "Cinema 4D"], correctAnswer: "Blender" },
-            { question: "What does VFX stand for in the context of filmmaking?", options: ["Visual Fidelity X-ray", "Video Frame Extension", "Visual Effects", "Virtual Film Xperience"], correctAnswer: "Visual Effects" },
-            { question: "Which game engine is widely known for its physically based rendering and robust visual scripting capabilities?", options: ["Unity", "Godot Engine", "GameMaker Studio 2", "Unreal Engine"], correctAnswer: "Unreal Engine" },
-            { question: "In video editing, what is 'compositing'?", options: ["Arranging clips in a sequence", "Applying color correction", "Combining multiple visual elements into a single image or scene", "Adding background music"], correctAnswer: "Combining multiple visual elements into a single image or scene" },
-            { question: "Which AI tool is commonly used for generating images from text descriptions?", options: ["ChatGPT", "Midjourney", "Adobe Photoshop", "DaVinci Resolve"], correctAnswer: "Midjourney" },
-            { question: "What is the industry-standard software for professional visual effects compositing?", options: ["Adobe Premiere Pro", "Avid Media Composer", "Nuke", "DaVinci Resolve"], correctAnswer: "Nuke" },
-            { question: "Which technique involves shooting actors against a solid color background (usually green or blue) to later replace it with a different background?", options: ["Rotoscoping", "Motion Capture", "Chroma Keying", "Matchmoving"], correctAnswer: "Chroma Keying" },
-            { question: "What is a 'rig' in 3D animation?", options: ["A type of lighting setup", "A character's costume", "A set of controls used to deform and animate a 3D model", "A texture map"], correctAnswer: "A set of controls used to deform and animate a 3D model" },
-            { question: "Which term describes the process of tracking the movement of a camera in real footage to replicate it in a 3D environment?", options: ["Keyframing", "Camera Tracking (Matchmoving)", "Rendering", "Sculpting"], correctAnswer: "Camera Tracking (Matchmoving)" },
-            { question: "What does 'PBR' stand for in 3D rendering?", options: ["Pixel Based Rendering", "Physically Based Rendering", "Polygon Based Resolution", "Procedural Brightness Reference"], correctAnswer: "Physically Based Rendering" },
-            { question: "Which of these is NOT a common phase in a VFX pipeline?", options: ["Pre-production", "Photography/Filming", "Post-production", "Recipe Development"], correctAnswer: "Recipe Development" },
-            { question: "What is 'alpha channel' primarily used for in digital imagery?", options: ["Storing color information", "Defining transparency or opacity", "Adding reflective properties", "Controlling brightness"], correctAnswer: "Defining transparency or opacity" },
-            { question: "Which programming language is most commonly associated with game development in Unity?", options: ["Python", "Java", "C#", "JavaScript"], correctAnswer: "C#" },
-            { question: "What is the purpose of a 'normal map' in 3D graphics?", options: ["To add color to a model", "To define reflective surfaces", "To simulate detailed surface bumps and grooves without adding geometry", "To animate textures"], correctAnswer: "To simulate detailed surface bumps and grooves without adding geometry" },
-            { question: "Which type of AI is specifically designed to generate new, original content like images, text, or music?", options: ["Discriminative AI", "Predictive AI", "Generative AI", "Analytical AI"], correctAnswer: "Generative AI" },
-            { question: "What is the process of creating the illusion of motion from a sequence of static images?", options: ["Modeling", "Texturing", "Animation", "Rigging"], correctAnswer: "Animation" },
-            { question: "In filmmaking, what is the role of a 'concept artist'?", options: ["To write the script", "To create visual designs and illustrations to convey ideas for films or games", "To manage the film budget", "To direct the actors"], correctAnswer: "To create visual designs and illustrations to convey ideas for films or games" },
-            { question: "Which Adobe software is best known for motion graphics and visual effects?", options: ["Adobe Photoshop", "Adobe Illustrator", "Adobe After Effects", "Adobe Premiere Pro"], correctAnswer: "Adobe After Effects" },
-            { question: "What is a 'sprite sheet' in 2D game development?", options: ["A list of game characters", "A single image containing multiple smaller images (sprites) used for animation", "A document outlining game levels", "A file for game audio"], correctAnswer: "A single image containing multiple smaller images (sprites) used for animation" },
-            { question: "What is 'ray tracing' in computer graphics?", options: ["A method for drawing lines on screen", "A technique for simulating light paths to render realistic images", "A way to compress image files", "A type of video compression"], correctAnswer: "A technique for simulating light paths to render realistic images" },
-            { question: "Which of these AI concepts involves training a model by feeding it a large amount of data without specific labels?", options: ["Supervised Learning", "Reinforcement Learning", "Unsupervised Learning", "Active Learning"], correctAnswer: "Unsupervised Learning" },
-            { question: "What is 'digital sculpting' often used for in 3D production?", options: ["Creating realistic textures", "Building initial low-polygon models", "Adding fine details and organic shapes to 3D models", "Animating character movements"], correctAnswer: "Adding fine details and organic shapes to 3D models" }
+            {
+                question: "What is the primary software used for 3D modeling and animation by Blender Guru?",
+                options: ["Cinema 4D", "3ds Max", "Blender", "Maya"],
+                answer: "Blender"
+            },
+            {
+                question: "Which term describes the process of combining visual elements from different sources into a single image or sequence?",
+                options: ["Keyframing", "Compositing", "Rigging", "Rendering"],
+                answer: "Compositing"
+            },
+            {
+                question: "What is the purpose of the 'Nuke Non-Commercial' software mentioned in the learning hub?",
+                options: ["Video editing", "3D sculpting", "Digital compositing", "Sound design"],
+                answer: "Digital compositing"
+            }
         ];
-
         let currentQuestionIndex = 0;
-        let score = 0;
-        let answered = false;
-
-        const questionText = document.getElementById('question-text');
+        const questionTextElement = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
         const feedbackArea = document.getElementById('feedback-area');
         const restartButton = document.getElementById('restart-button');
 
         function loadQuestion() {
-            if (!questionText || !optionsContainer || !feedbackArea || !restartButton) {
-                console.error("Quiz elements not found. Exiting quiz initialization.");
-                return; 
+            if (currentQuestionIndex < quizQuestions.length) {
+                const q = quizQuestions[currentQuestionIndex];
+                questionTextElement.textContent = q.question;
+                optionsContainer.innerHTML = '';
+                q.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('quiz-option-btn');
+                    button.addEventListener('click', () => checkAnswer(option, q.answer));
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                showQuizResult();
             }
-            
-            answered = false;
-            feedbackArea.classList.add('hidden');
-            restartButton.classList.add('hidden');
-            
-            // Re-shuffle quiz questions only when the quiz restarts, not every time a question loads
-            if (currentQuestionIndex === 0) {
-                quizQuestions.sort(() => Math.random() - 0.5);
-            }
-
-            const q = quizQuestions[currentQuestionIndex];
-            questionText.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
-            optionsContainer.innerHTML = '';
-
-            // Randomize options order for each question
-            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
-
-            shuffledOptions.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('quiz-option-btn');
-                button.onclick = () => checkAnswer(option, q.correctAnswer, button);
-                optionsContainer.appendChild(button);
-            });
         }
 
-        function checkAnswer(selectedOption, correctAnswer, clickedButton) {
-            if (answered) return; // Prevent multiple clicks
-            answered = true;
-
-            Array.from(optionsContainer.children).forEach(btn => {
-                btn.disabled = true; // Disable all options after an answer
-                if (btn.textContent === correctAnswer) {
-                    btn.classList.add('correct');
+        function checkAnswer(selectedOption, correctAnswer) {
+            const buttons = optionsContainer.querySelectorAll('.quiz-option-btn');
+            buttons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === correctAnswer) {
+                    button.classList.add('correct');
+                } else if (button.textContent === selectedOption) {
+                    button.classList.add('incorrect');
                 }
             });
-
             if (selectedOption === correctAnswer) {
                 feedbackArea.textContent = "Correct! 🎉";
-                feedbackArea.className = 'text-center mt-6 text-xl font-medium text-green-400';
-                clickedButton.classList.add('correct'); // Highlight the correct chosen answer
-                score++;
             } else {
-                feedbackArea.textContent = `Incorrect. The answer is "${correctAnswer}". 😔`;
-                feedbackArea.className = 'text-center mt-6 text-xl font-medium text-red-500';
-                clickedButton.classList.add('incorrect'); // Highlight the incorrect chosen answer
+                feedbackArea.textContent = `Incorrect. The correct answer was "${correctAnswer}". 🙁`;
             }
             feedbackArea.classList.remove('hidden');
-
-            setTimeout(nextQuestion, 2000); // Move to next question after 2 seconds
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizQuestions.length) {
+                    feedbackArea.classList.add('hidden');
+                    loadQuestion();
+                } else {
+                    showQuizResult();
+                }
+            }, 2000);
         }
 
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            questionText.textContent = `Quiz Finished!`;
-            optionsContainer.innerHTML = `<p class="text-2xl text-center text-zinc-200 col-span-2">You scored ${score} out of ${quizQuestions.length}!</p>`;
-            feedbackArea.classList.add('hidden');
+        function showQuizResult() {
+            questionTextElement.textContent = "Quiz Complete!";
+            optionsContainer.innerHTML = '';
+            feedbackArea.textContent = `You finished the quiz! Click "Restart Quiz" to try again.`;
+            feedbackArea.classList.remove('hidden');
             restartButton.classList.remove('hidden');
-            restartButton.onclick = restartQuiz;
         }
-        
-        function restartQuiz() {
+
+        restartButton.addEventListener('click', () => {
             currentQuestionIndex = 0;
-            score = 0;
+            restartButton.classList.add('hidden');
+            feedbackArea.classList.add('hidden');
             loadQuestion();
-        }
+        });
 
-        // Initialize quiz if container exists
-        if(document.getElementById('quiz-container')) {
-            loadQuestion();
-        }
-
-        // --- Simulated Login Logic (NOT SECURE!) ---
-        function simulateLogin(provider) {
-            alert(`Simulating login with ${provider}. This is a demonstration only. Real login requires a backend!`);
-            // In a real application, after a successful backend authentication,
-            // you would redirect the user.
-            window.location.href = "after_login.html"; // Redirect to a dummy "next page"
-        }
+        loadQuestion();
     </script>
 </body>
 </html>
-```
