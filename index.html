@@ -278,6 +278,21 @@
         .service-item:hover .service-icon {
             color: #6ee7b7; /* Highlight icon on hover */
         }
+        
+        /* 3D Canvas Styles */
+        #threejs-canvas {
+            width: 100%;
+            height: 400px;
+            border-radius: 1rem;
+            background: #111;
+            cursor: grab;
+            transition: box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #threejs-canvas:active {
+            cursor: grabbing;
+        }
+
 
         /* Responsive adjustments */
         @media (max-width: 767px) {
@@ -365,6 +380,16 @@
         </section>
         
         <section class="section-card" data-section>
+            <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Interactive 3D Showcase</h2>
+            <div class="relative w-full aspect-[16/9] max-w-4xl mx-auto">
+                <canvas id="threejs-canvas" class="absolute top-0 left-0"></canvas>
+            </div>
+            <p class="text-center mt-6 text-lg text-zinc-400">
+                A simple animated 3D cube created with Three.js. You can drag and rotate it!
+            </p>
+        </section>
+        
+        <section class="section-card" data-section>
             <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-8 text-center">Services I Offer</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="service-item">
@@ -415,15 +440,15 @@
                 <div class="flex justify-center mt-8">
                     <button id="restart-button" class="btn-primary hidden">Restart Quiz</button>
                 </div>
-            </div>   
-  </section>
+            </div>  
+    </section>
 
             <section>
-  
-                 <section class="container">
-                    <section class="section-card" data-section>
-                        <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">        
+                
+                    <section class="container">
+                        <section class="section-card" data-section>
+                            <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">        
         <div>
             <h3 class="text-xl font-semibold text-white mb-4">3D & Animation</h3>
             <div class="space-y-3">
@@ -541,6 +566,7 @@
         © <span id="current-year">2025</span> CINI FX | Created by Nagaprasath | All rights reserved.
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -566,134 +592,153 @@
             observer.observe(section);
         });
 
-        // --- Quiz Game Logic ---
-        const quizQuestions = [
-            { question: "Which software is primarily used for 3D modeling and animation, known for its open-source nature?", options: ["Autodesk Maya", "Adobe After Effects", "Blender", "Cinema 4D"], correctAnswer: "Blender" },
-            { question: "What does VFX stand for in the context of filmmaking?", options: ["Visual Fidelity X-ray", "Video Frame Extension", "Visual Effects", "Virtual Film Xperience"], correctAnswer: "Visual Effects" },
-            { question: "Which game engine is widely known for its physically based rendering and robust visual scripting capabilities?", options: ["Unity", "Godot Engine", "GameMaker Studio 2", "Unreal Engine"], correctAnswer: "Unreal Engine" },
-            { question: "In video editing, what is 'compositing'?", options: ["Arranging clips in a sequence", "Applying color correction", "Combining multiple visual elements into a single image or scene", "Adding background music"], correctAnswer: "Combining multiple visual elements into a single image or scene" },
-            { question: "Which AI tool is commonly used for generating images from text descriptions?", options: ["ChatGPT", "Midjourney", "Adobe Photoshop", "DaVinci Resolve"], correctAnswer: "Midjourney" },
-            { question: "What is the industry-standard software for professional visual effects compositing?", options: ["Adobe Premiere Pro", "Avid Media Composer", "Nuke", "DaVinci Resolve"], correctAnswer: "Nuke" },
-            { question: "Which technique involves shooting actors against a solid color background (usually green or blue) to later replace it with a different background?", options: ["Rotoscoping", "Motion Capture", "Chroma Keying", "Matchmoving"], correctAnswer: "Chroma Keying" },
-            { question: "What is a 'rig' in 3D animation?", options: ["A type of lighting setup", "A character's costume", "A set of controls used to deform and animate a 3D model", "A texture map"], correctAnswer: "A set of controls used to deform and animate a 3D model" },
-            { question: "Which term describes the process of tracking the movement of a camera in real footage to replicate it in a 3D environment?", options: ["Keyframing", "Camera Tracking (Matchmoving)", "Rendering", "Sculpting"], correctAnswer: "Camera Tracking (Matchmoving)" },
-            { question: "What does 'PBR' stand for in 3D rendering?", options: ["Pixel Based Rendering", "Physically Based Rendering", "Polygon Based Resolution", "Procedural Brightness Reference"], correctAnswer: "Physically Based Rendering" },
-            { question: "Which of these is NOT a common phase in a VFX pipeline?", options: ["Pre-production", "Photography/Filming", "Post-production", "Recipe Development"], correctAnswer: "Recipe Development" },
-            { question: "What is 'alpha channel' primarily used for in digital imagery?", options: ["Storing color information", "Defining transparency or opacity", "Adding reflective properties", "Controlling brightness"], correctAnswer: "Defining transparency or opacity" },
-            { question: "Which programming language is most commonly associated with game development in Unity?", options: ["Python", "Java", "C#", "JavaScript"], correctAnswer: "C#" },
-            { question: "What is the purpose of a 'normal map' in 3D graphics?", options: ["To add color to a model", "To define reflective surfaces", "To simulate detailed surface bumps and grooves without adding geometry", "To animate textures"], correctAnswer: "To simulate detailed surface bumps and grooves without adding geometry" },
-            { question: "Which type of AI is specifically designed to generate new, original content like images, text, or music?", options: ["Discriminative AI", "Predictive AI", "Generative AI", "Analytical AI"], correctAnswer: "Generative AI" },
-            { question: "What is the process of creating the illusion of motion from a sequence of static images?", options: ["Modeling", "Texturing", "Animation", "Rigging"], correctAnswer: "Animation" },
-            { question: "In filmmaking, what is the role of a 'concept artist'?", options: ["To write the script", "To create visual designs and illustrations to convey ideas for films or games", "To manage the film budget", "To direct the actors"], correctAnswer: "To create visual designs and illustrations to convey ideas for films or games" },
-            { question: "Which Adobe software is best known for motion graphics and visual effects?", options: ["Adobe Photoshop", "Adobe Illustrator", "Adobe After Effects", "Adobe Premiere Pro"], correctAnswer: "Adobe After Effects" },
-            { question: "What is a 'sprite sheet' in 2D game development?", options: ["A list of game characters", "A single image containing multiple smaller images (sprites) used for animation", "A document outlining game levels", "A file for game audio"], correctAnswer: "A single image containing multiple smaller images (sprites) used for animation" },
-            { question: "What is 'ray tracing' in computer graphics?", options: ["A method for drawing lines on screen", "A technique for simulating light paths to render realistic images", "A way to compress image files", "A type of video compression"], correctAnswer: "A technique for simulating light paths to render realistic images" },
-            { question: "Which of these AI concepts involves training a model by feeding it a large amount of data without specific labels?", options: ["Supervised Learning", "Reinforcement Learning", "Unsupervised Learning", "Active Learning"], correctAnswer: "Unsupervised Learning" },
-            { question: "What is 'digital sculpting' often used for in 3D production?", options: ["Creating realistic textures", "Building initial low-polygon models", "Adding fine details and organic shapes to 3D models", "Animating character movements"], correctAnswer: "Adding fine details and organic shapes to 3D models" }
-        ];
+        // --- 3D Showcase Logic (Three.js with Shaders) ---
+        const canvas = document.getElementById('threejs-canvas');
+        if (canvas) {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setClearColor(0x000000, 0); // Transparent background
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let answered = false;
+            const ambientLight = new THREE.AmbientLight(0x404040, 2.5); // Soft white light
+            scene.add(ambientLight);
 
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const feedbackArea = document.getElementById('feedback-area');
-        const restartButton = document.getElementById('restart-button');
+            // Create a point light for the 'liquid metal' reflection
+            const pointLight = new THREE.PointLight(0x6ee7b7, 5, 100);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
 
-        function loadQuestion() {
-            if (!questionText || !optionsContainer || !feedbackArea || !restartButton) {
-                console.error("Quiz elements not found. Exiting quiz initialization.");
-                return; 
-            }
-            
-            answered = false;
-            feedbackArea.classList.add('hidden');
-            restartButton.classList.add('hidden');
-            
-            // Re-shuffle quiz questions only when the quiz restarts, not every time a question loads
-            if (currentQuestionIndex === 0) {
-                quizQuestions.sort(() => Math.random() - 0.5);
-            }
+            // Shaders for the liquid metal effect
+            const vertexShader = `
+                uniform float u_time;
+                uniform vec2 u_mouse;
+                uniform vec3 u_lightPos;
+                varying vec3 vNormal;
+                varying vec3 vLight;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    
+                    // Simple displacement effect using sine wave
+                    vec3 displacedPosition = position;
+                    displacedPosition.x += sin(displacedPosition.y * 3.0 + u_time * 2.0) * 0.2;
+                    displacedPosition.z += cos(displacedPosition.x * 3.0 + u_time * 2.0) * 0.2;
+                    
+                    vec4 modelViewPosition = modelViewMatrix * vec4(displacedPosition, 1.0);
+                    gl_Position = projectionMatrix * modelViewPosition;
 
-            const q = quizQuestions[currentQuestionIndex];
-            questionText.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
-            optionsContainer.innerHTML = '';
+                    vLight = normalize(u_lightPos - modelViewPosition.xyz);
+                }
+            `;
 
-            // Randomize options order for each question
-            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            const fragmentShader = `
+                uniform float u_time;
+                uniform vec2 u_resolution;
+                uniform float u_mouse_state; // 0 for idle, 1 for dragging
+                varying vec3 vNormal;
+                varying vec3 vLight;
 
-            shuffledOptions.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('quiz-option-btn');
-                button.onclick = () => checkAnswer(option, q.correctAnswer, button);
-                optionsContainer.appendChild(button);
+                void main() {
+                    vec3 normal = normalize(vNormal);
+                    vec3 light = normalize(vLight);
+                    
+                    // Basic reflection calculation
+                    vec3 reflected = reflect(light, normal);
+                    float reflectivity = max(0.0, dot(reflected, vec3(0.0, 0.0, 1.0)));
+                    
+                    // Add a sine wave effect to create a subtle liquid flow
+                    float flowEffect = sin(u_time * 2.0 + normal.x * 5.0) * 0.2 + sin(u_time * 1.5 + normal.y * 5.0) * 0.3;
+                    reflectivity += flowEffect;
+                    
+                    // Color and glow
+                    vec3 baseColor = vec3(0.1, 0.8, 0.5); // A nice green
+                    vec3 finalColor = baseColor * (reflectivity + 0.5);
+                    
+                    // Add a slight glow based on mouse interaction
+                    finalColor *= (1.0 + u_mouse_state * 0.2);
+                    
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            const uniforms = {
+                u_time: { type: 'f', value: 0.0 },
+                u_mouse: { type: 'v2', value: new THREE.Vector2() },
+                u_lightPos: { type: 'v3', value: pointLight.position },
+                u_mouse_state: { type: 'f', value: 0.0 }
+            };
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
             });
-        }
 
-        function checkAnswer(selectedOption, correctAnswer, clickedButton) {
-            if (answered) return; // Prevent multiple clicks
-            answered = true;
+            const geometry = new THREE.IcosahedronGeometry(1.5, 40);
+            const sculpture = new THREE.Mesh(geometry, material);
+            scene.add(sculpture);
 
-            Array.from(optionsContainer.children).forEach(btn => {
-                btn.disabled = true; // Disable all options after an answer
-                if (btn.textContent === correctAnswer) {
-                    btn.classList.add('correct');
+            camera.position.z = 4;
+
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+            let mouse = new THREE.Vector2();
+
+            canvas.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                uniforms.u_mouse_state.value = 1.0;
+                previousMousePosition.x = e.clientX;
+                previousMousePosition.y = e.clientY;
+            });
+
+            canvas.addEventListener('mouseup', function() {
+                isDragging = false;
+                uniforms.u_mouse_state.value = 0.0;
+            });
+
+            canvas.addEventListener('mousemove', function(e) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = (e.clientX - rect.left) / rect.width * 2 - 1;
+                mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+                
+                uniforms.u_mouse.value.x = mouse.x;
+                uniforms.u_mouse.value.y = mouse.y;
+
+                if (isDragging) {
+                    const deltaMove = {
+                        x: e.clientX - previousMousePosition.x,
+                        y: e.clientY - previousMousePosition.y
+                    };
+                    const sensitivity = 0.005;
+                    sculpture.rotation.y += deltaMove.x * sensitivity;
+                    sculpture.rotation.x += deltaMove.y * sensitivity;
+                    previousMousePosition.x = e.clientX;
+                    previousMousePosition.y = e.clientY;
                 }
             });
 
-            if (selectedOption === correctAnswer) {
-                feedbackArea.textContent = "Correct! 🎉";
-                feedbackArea.className = 'text-center mt-6 text-xl font-medium text-green-400';
-                clickedButton.classList.add('correct'); // Highlight the correct chosen answer
-                score++;
-            } else {
-                feedbackArea.textContent = `Incorrect. The answer is "${correctAnswer}". 😔`;
-                feedbackArea.className = 'text-center mt-6 text-xl font-medium text-red-500';
-                clickedButton.classList.add('incorrect'); // Highlight the incorrect chosen answer
-            }
-            feedbackArea.classList.remove('hidden');
+            window.addEventListener('resize', () => {
+                const parent = canvas.parentElement;
+                renderer.setSize(parent.clientWidth, parent.clientHeight);
+                camera.aspect = parent.clientWidth / parent.clientHeight;
+                camera.updateProjectionMatrix();
+            });
 
-            setTimeout(nextQuestion, 2000); // Move to next question after 2 seconds
-        }
+            const animate = (time) => {
+                requestAnimationFrame(animate);
+                uniforms.u_time.value = time * 0.001;
 
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            questionText.textContent = `Quiz Finished!`;
-            optionsContainer.innerHTML = `<p class="text-2xl text-center text-zinc-200 col-span-2">You scored ${score} out of ${quizQuestions.length}!</p>`;
-            feedbackArea.classList.add('hidden');
-            restartButton.classList.remove('hidden');
-            restartButton.onclick = restartQuiz;
-        }
-        
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            loadQuestion();
-        }
-
-        // Initialize quiz if container exists
-        if(document.getElementById('quiz-container')) {
-            loadQuestion();
-        }
-
-        // --- Simulated Login Logic (NOT SECURE!) ---
-        function simulateLogin(provider) {
-            alert(`Simulating login with ${provider}. This is a demonstration only. Real login requires a backend!`);
-            // In a real application, after a successful backend authentication,
-            // you would redirect the user.
-            window.location.href = "after_login.html"; // Redirect to a dummy "next page"
+                if (!isDragging) {
+                    // Passive animation and mouse-follow effect
+                    sculpture.rotation.y += 0.001;
+                    sculpture.rotation.x += 0.001;
+                    sculpture.rotation.z += 0.001;
+                }
+                
+                renderer.render(scene, camera);
+            };
+            animate();
         }
     </script>
 </body>
 </html>
-```
