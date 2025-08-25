@@ -25,14 +25,20 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.9; }
+        }
 
-        /* --- New Luma Labs Inspired Minimalist Theme --- */
+        /* --- New Luma Labs Inspired Theme with a vibrant twist --- */
         :root {
             --background: #000000;
             --foreground: #ffffff;
-            --subtle-gray: #a1a1aa; /* zinc-400 */
-            --card-bg: #18181b; /* zinc-900 */
-            --border-color: rgba(255, 255, 255, 0.1);
+            --subtle-gray: #a1a1aa;
+            --card-bg: #0c0c0e;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --accent-blue: #007bff;
+            --accent-yellow: #f0ff00;
         }
 
         body {
@@ -45,11 +51,18 @@
             justify-content: space-between;
             overflow-x: hidden;
             animation: fadeIn 1s ease-out;
+            
+            /* The background is now a single, solid color */
+            background-image: none;
+            background-color: var(--background);
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 1.5rem;
+            position: relative;
+            z-index: 10;
         }
         .section-card {
             background-color: var(--card-bg);
@@ -61,6 +74,24 @@
             opacity: 0;
             transform: translateY(30px);
             border: 1px solid var(--border-color);
+            position: relative;
+        }
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-yellow));
+            filter: blur(20px);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            border-radius: 1.5rem;
+        }
+        .section-card:hover::before {
+            opacity: 0.2;
         }
         .section-card.is-revealed {
             animation: slideInUp 0.8s ease-out forwards;
@@ -68,18 +99,18 @@
         .section-card:hover {
             transform: translateY(-5px);
             border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Subtle lift effect */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* Apply textFadeIn to main titles within sections */
         .section-card.is-revealed h2,
         .section-card.is-revealed h3,
         .section-card.is-revealed p,
         .section-card.is-revealed .btn-primary,
         .section-card.is-revealed .social-login-button,
-        .section-card.is-revealed .service-item { /* Added service-item */
+        .section-card.is-revealed .service-item {
             animation: textFadeIn 0.8s ease-out forwards;
-            opacity: 0; /* Start hidden */
+            opacity: 0;
         }
         /* Stagger animation for elements within revealed sections */
         .section-card.is-revealed h2 { animation-delay: 0.2s; }
@@ -87,43 +118,49 @@
         .section-card.is-revealed p { animation-delay: 0.4s; }
         .section-card.is-revealed .btn-primary { animation-delay: 0.5s; }
         .section-card.is-revealed .social-login-button { animation-delay: 0.6s; }
-        .section-card.is-revealed .service-item { animation-delay: 0.5s; } /* Stagger for service items */
-
+        .section-card.is-revealed .service-item { animation-delay: 0.5s; }
 
         /* --- Typography & Title Styles --- */
         .main-title {
             color: var(--foreground);
             letter-spacing: -0.05em;
+            text-shadow: 0 0 10px var(--accent-blue), 0 0 20px var(--accent-yellow);
+            transition: text-shadow 0.3s ease;
         }
-        .text-gradient { /* Re-purposed for subtle headings */
-            color: var(--foreground);
+        .main-title:hover {
+            text-shadow: 0 0 15px var(--accent-blue), 0 0 30px var(--accent-yellow);
+        }
+        .text-gradient {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-weight: 600;
         }
         .strong-accent {
-            color: var(--foreground);
+            color: var(--accent-yellow);
             font-weight: 500;
         }
-        
+
         /* --- UI Element Styles --- */
         .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
-            background: var(--foreground);
-            color: var(--background); 
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-yellow));
+            color: var(--background);
             padding: 1rem 2.25rem;
             border-radius: 50px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease-out;
-            border: 1px solid var(--foreground);
+            border: none;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            animation: subtlePulse 2s infinite ease-in-out;
         }
         .btn-primary:hover {
-            background: var(--background);
-            color: var(--foreground);
-            transform: translateY(-3px) scale(1.02); /* Slight lift and scale */
+            transform: translateY(-3px) scale(1.05);
             box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+            animation: none;
         }
         .quiz-option-btn {
             background-color: var(--card-bg);
@@ -135,32 +172,34 @@
             border: 1px solid var(--border-color);
             transition: all 0.2s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
         .quiz-option-btn:hover {
-            background-color: var(--foreground);
-            border-color: var(--foreground);
-            color: var(--background);
-            transform: scale(1.02); /* Subtle scale on hover */
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            background-color: var(--card-bg);
+            border-color: var(--accent-blue);
+            color: var(--foreground);
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         .quiz-option-btn.correct { background-color: #16a34a; border-color: #22c55e; color: #ffffff; font-weight: 700; transform: scale(1.03); }
         .quiz-option-btn.incorrect { background-color: #dc2626; border-color: #ef4444; color: #ffffff; font-weight: 700; transform: scale(0.98); }
         .hidden { display: none; }
         .profile-img {
             border-radius: 50%;
-            border: 2px solid var(--border-color);
-            transition: transform 0.3s ease-in-out;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); /* Soft glow */
+            border: 2px solid var(--accent-blue);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+            box-shadow: 0 0 20px var(--accent-blue);
         }
-        .profile-img:hover { 
-            transform: scale(1.08); /* More pronounced scale */
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        .profile-img:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px var(--accent-yellow);
         }
         .video-container {
             position: relative; width: 100%; padding-bottom: 56.25%; height: 0;
             overflow: hidden; border-radius: 1.25rem;
             background-color: #111;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
         }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .social-link {
@@ -173,24 +212,24 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .social-link:hover {
-            animation: bounceEffect 0.6s ease-in-out; /* Apply bounce animation */
-            background: var(--foreground);
+            animation: bounceEffect 0.6s ease-in-out;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-yellow));
             color: var(--background);
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
         }
-        
+
         /* New style for the UPI link */
         .upi-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--foreground);
+            color: var(--accent-yellow);
             font-weight: 700;
             text-decoration: none;
             transition: color 0.3s ease;
         }
         .upi-link:hover {
-            color: #6ee7b7; /* A subtle green from Tailwind's emerald-300 for emphasis */
+            color: var(--accent-blue);
             text-decoration: underline;
         }
 
@@ -206,56 +245,25 @@
             text-decoration: none;
             transition: all 0.2s ease-in-out;
             border: 1px solid transparent;
-            color: var(--foreground); /* Default text color */
-            background-color: var(--card-bg); /* Default background */
+            color: var(--foreground);
+            background-color: var(--card-bg);
         }
         .social-login-button i {
             font-size: 1.5rem;
         }
-
-        .social-login-button.google {
-            border-color: #db4437; /* Google red */
-        }
-        .social-login-button.google:hover {
-            background-color: #db4437;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(219, 68, 55, 0.3);
-        }
-
-        .social-login-button.github {
-            border-color: #333; /* GitHub dark gray */
-        }
-        .social-login-button.github:hover {
-            background-color: #333;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(51, 51, 51, 0.3);
-        }
-
-        .social-login-button.facebook {
-            border-color: #1877f2; /* Facebook blue */
-        }
-        .social-login-button.facebook:hover {
-            background-color: #1877f2;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
-        }
-
-        .social-login-button.instagram {
-            border-color: #c13584; /* Instagram gradient-ish */
-        }
-        .social-login-button.instagram:hover {
-            background-color: #c13584;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(193, 53, 132, 0.3);
-        }
+        /* Revert these specific social button colors for better recognition */
+        .social-login-button.google { border-color: #db4437; }
+        .social-login-button.google:hover { background-color: #db4437; color: white; transform: translateY(-2px); box-shadow: 4px 10px rgba(219, 68, 55, 0.3); }
+        .social-login-button.github { border-color: #333; }
+        .social-login-button.github:hover { background-color: #333; color: white; transform: translateY(-2px); box-shadow: 4px 10px rgba(51, 51, 51, 0.3); }
+        .social-login-button.facebook { border-color: #1877f2; }
+        .social-login-button.facebook:hover { background-color: #1877f2; color: white; transform: translateY(-2px); box-shadow: 4px 10px rgba(24, 119, 242, 0.3); }
+        .social-login-button.instagram { border-color: #c13584; }
+        .social-login-button.instagram:hover { background-color: #c13584; color: white; transform: translateY(-2px); box-shadow: 4px 10px rgba(193, 53, 132, 0.3); }
 
         /* Styling for the services section */
         .service-item {
-            background-color: #1f1f22; /* Slightly lighter card background */
+            background-color: #0d0d0f;
             border-radius: 0.75rem;
             padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -270,13 +278,12 @@
 
         .service-icon {
             font-size: 2.5rem;
-            color: var(--foreground);
+            color: var(--accent-blue);
             margin-bottom: 1rem;
             transition: color 0.3s ease;
         }
-
         .service-item:hover .service-icon {
-            color: #6ee7b7; /* Highlight icon on hover */
+            color: var(--accent-yellow);
         }
         
         /* 3D Canvas Styles */
@@ -292,68 +299,39 @@
         #threejs-canvas:active {
             cursor: grabbing;
         }
+        
+        /* New Styles for interactive text and titles */
+        .hover-glow {
+            position: relative;
+            display: inline-block;
+            transition: text-shadow 0.3s ease, color 0.3s ease;
+        }
 
+        .hover-glow:hover {
+            color: var(--foreground);
+            text-shadow: 0 0 5px var(--accent-blue), 0 0 10px var(--accent-blue), 0 0 15px var(--accent-blue);
+        }
 
         /* Responsive adjustments */
         @media (max-width: 767px) {
-            .section-card {
-                padding: 1.5rem;
-                margin-bottom: 2.5rem;
-                border-radius: 1.25rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            .main-title {
-                font-size: 3.5rem; /* Further adjusted for very small screens */
-            }
-            .text-xl.md\:text-2xl {
-                font-size: 1.125rem; /* text-xl */
-            }
-            .text-3xl.md\:text-4xl {
-                font-size: 2rem; /* text-3xl */
-            }
-            .btn-primary {
-                padding: 0.8rem 1.8rem;
-                font-size: 0.9rem;
-            }
-            .profile-img {
-                width: 180px;
-                height: 180px;
-            }
-            .about-grid { /* Revert to single column on small screens */
-                grid-template-columns: 1fr;
-            }
-            .connect-grid-content.text-left.md\:text-right {
-                text-align: left; /* Ensure left alignment on mobile */
-            }
-            .connect-grid-content.text-left.md\:border-t-0 {
-                border-top: 2px solid var(--zinc-800);
-                padding-top: 2rem;
-                margin-top: 2rem;
-                padding-left: 0; /* Remove desktop padding */
-            }
-            .social-links-mobile-center {
-                justify-content: center; /* Center social links on mobile */
-            }
-            .social-login-button {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-            .social-login-button i {
-                font-size: 1.25rem;
-            }
+            .section-card { padding: 1.5rem; margin-bottom: 2.5rem; border-radius: 1.25rem; }
+            .container { padding: 1rem; }
+            .main-title { font-size: 3.5rem; }
+            .text-xl.md\:text-2xl { font-size: 1.125rem; }
+            .text-3xl.md\:text-4xl { font-size: 2rem; }
+            .btn-primary { padding: 0.8rem 1.8rem; font-size: 0.9rem; }
+            .profile-img { width: 180px; height: 180px; }
+            .about-grid { grid-template-columns: 1fr; }
+            .connect-grid-content.text-left.md\:text-right { text-align: left; }
+            .connect-grid-content.text-left.md\:border-t-0 { border-top: 2px solid var(--zinc-800); padding-top: 2rem; margin-top: 2rem; padding-left: 0; }
+            .social-links-mobile-center { justify-content: center; }
+            .social-login-button { padding: 0.75rem 1rem; font-size: 0.9rem; }
+            .social-login-button i { font-size: 1.25rem; }
         }
         @media (min-width: 768px) {
-            .main-title {
-                font-size: 9rem; /* text-9xl */
-            }
-            .text-xl.md\:text-2xl {
-                font-size: 1.5rem; /* text-2xl */
-            }
-            .text-3xl.md\:text-4xl {
-                font-size: 2.25rem; /* text-4xl */
-            }
+            .main-title { font-size: 9rem; }
+            .text-xl.md\:text-2xl { font-size: 1.5rem; }
+            .text-3xl.md\:text-4xl { font-size: 2.25rem; }
             .about-grid { grid-template-columns: 1fr 250px; }
         }
     </style>
@@ -369,7 +347,7 @@
         <section class="section-card text-center" data-section>
             <h2 class="text-3xl md:text-4xl text-gradient mb-6">Welcome to CINI FX!</h2>
             <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto mb-4">
-                Dive deep into the enchanting world of cinema, mesmerizing VFX, and thrilling games with us. At CINI FX, we celebrate the magic of movies, unravel the secrets behind stunning visual effects, and explore the exciting realms of gaming. Whether you're a film fanatic, a VFX enthusiast, or a gaming guru, we've got something for you.
+                Dive deep into the enchanting world of cinema, mesmerizing VFX, and thrilling games with us. At CINI FX, we we celebrate the magic of movies, unravel the secrets behind stunning visual effects, and explore the exciting realms of gaming. Whether you're a film fanatic, a VFX enthusiast, or a gaming guru, we've got something for you.
             </p>
             <p class="text-lg text-zinc-300 leading-relaxed max-w-3xl mx-auto">
                 Subscribe and join the CINI FX community today!
@@ -426,69 +404,65 @@
         </section>
 
         <section class="container">
-
-
-        <section class="section-card" data-section>
-            <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-4 text-center">Tech & Creative Quiz</h2>
-            <div id="quiz-container" class="bg-black/20 p-6 sm:p-8 rounded-lg">
-                <div id="question-area">
-                    <p class="text-xl font-medium mb-6 text-center text-zinc-300" id="question-text"></p>
-                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section class="section-card" data-section>
+                <h2 class="text-3xl md:text-4xl font-semibold text-gradient mb-4 text-center">Tech & Creative Quiz</h2>
+                <div id="quiz-container" class="bg-black/20 p-6 sm:p-8 rounded-lg">
+                    <div id="question-area">
+                        <p class="text-xl font-medium mb-6 text-center text-zinc-300" id="question-text"></p>
+                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        </div>
+                    </div>
+                    <div id="feedback-area" class="text-center mt-6 text-xl font-medium hidden"></div>
+                    <div class="flex justify-center mt-8">
+                        <button id="restart-button" class="btn-primary hidden">Restart Quiz</button>
                     </div>
                 </div>
-                <div id="feedback-area" class="text-center mt-6 text-xl font-medium hidden"></div>
-                <div class="flex justify-center mt-8">
-                    <button id="restart-button" class="btn-primary hidden">Restart Quiz</button>
+            </section>
+        </section>
+        
+        <section class="container">
+            <section class="section-card" data-section>
+                <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">3D & Animation</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@BlenderGuru" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
+                            <a href="https://www.youtube.com/channel/UCbmxZRQk-X0p-TOxd6PEYJA" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
+                            <a href="https://www.youtube.com/@CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
+                            <a href="https://www.youtube.com/@Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
+                            <a href="https://www.youtube.com/@Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
+                            <a href="https://polyhaven.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Poly Haven (Assets)</a>
+                            <a href="https://www.artstation.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ArtStation (Inspiration)</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">VFX & Compositing</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
+                            <a href="https://www.videocopilot.net/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Video Copilot</a>
+                            <a href="https://www.youtube.com/@BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
+                            <a href="https://www.actionvfx.com/blog" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ActionVFX Blog</a>
+                            <a href="https://www.thegnomonworkshop.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">The Gnomon Workshop</a>
+                            <a href="https://aescripts.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">aescripts + aeplugins</a>
+                            <a href="https://www.foundry.com/products/nuke-family/nuke-non-commercial" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Nuke Non-Commercial</a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
+                            <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
+                            <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
+                            <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
+                            <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
+                            <a href="https://huggingface.co/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Hugging Face (AI Models)</a>
+                            <a href="https://www.coursera.org/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Coursera (Courses)</a>
+                        </div>
+                    </div>
                 </div>
-            </div>  
-    </section>
-
-            <section>
-                
-                    <section class="container">
-                        <section class="section-card" data-section>
-                            <h2 class="text-2xl md:text-4xl font-semibold text-gradient mb-8 text-center">Learning Hub</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">        
-        <div>
-            <h3 class="text-xl font-semibold text-white mb-4">3D & Animation</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@BlenderGuru" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Blender Guru</a>
-                <a href="https://www.youtube.com/channel/UCbmxZRQk-X0p-TOxd6PEYJA" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ian Hubert</a>
-                <a href="https://www.youtube.com/@CGGeek" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">CG Geek</a>
-                <a href="https://www.youtube.com/@Polyfjord" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Polyfjord</a>
-                <a href="https://www.youtube.com/@Ducky3D" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ducky 3D</a>
-                <a href="https://polyhaven.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Poly Haven (Assets)</a>
-                <a href="https://www.artstation.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ArtStation (Inspiration)</a>
-            </div>
-        </div>
-        <div>
-
-            <h3 class="text-xl font-semibold text-white mb-4">VFX & Compositing</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@CorridorCrew" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Corridor Crew</a>
-                <a href="https://www.videocopilot.net/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Video Copilot</a>
-                <a href="https://www.youtube.com/@BenMarriott" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Ben Marriott</a>
-                <a href="https://www.actionvfx.com/blog" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">ActionVFX Blog</a>
-                <a href="https://www.thegnomonworkshop.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">The Gnomon Workshop</a>
-                <a href="https://aescripts.com/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">aescripts + aeplugins</a>
-                <a href="https://www.foundry.com/products/nuke-family/nuke-non-commercial" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Nuke Non-Commercial</a>
-            </div>
-        </div>
-        <div>
-            <h3 class="text-xl font-semibold text-white mb-4">Game Dev & AI</h3>
-            <div class="space-y-3">
-                <a href="https://www.youtube.com/@UnrealEngine" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unreal Engine</a>
-                <a href="https://www.youtube.com/@unity" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Unity</a>
-                <a href="https://www.youtube.com/@Brackeys" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Brackeys (Archive)</a>
-                <a href="https://80.lv/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">80 Level (Industry News)</a>
-                <a href="https://www.youtube.com/@TwoMinutePapers" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Two Minute Papers</a>
-                <a href="https://huggingface.co/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Hugging Face (AI Models)</a>
-                <a href="https://www.coursera.org/" target="_blank" class="block p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-all">Coursera (Courses)</a>
-            </div>
-        </div>
-    </div>
-</section>
-</section>
+            </section>
+        </section>
         <section class="section-card text-center" data-section>
             <h2 class="text-3xl md:text-4xl text-gradient mb-8">Portfolio & Showreel</h2>
             <div class="video-container mx-auto mb-8 w-full max-w-3xl">
@@ -532,7 +506,7 @@
                         <strong class="text-white">Phone:</strong> <span>+91 82202 10538</span>
                     </p>
                     <p class="text-lg text-zinc-300 mb-6 flex items-center justify-start md:justify-end space-x-3">
-                        <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover:underline">cinifxmedia@gmail.com</a>
+                        <strong class="text-white">Email:</strong> <a href="mailto:cinifxmedia@gmail.com" class="hover-glow">cinifxmedia@gmail.com</a>
                     </p>
                     <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Follow My Journey</h3>
                     <div class="flex justify-start md:justify-end space-x-3 social-links-mobile-center">
@@ -549,7 +523,7 @@
                     </p>
                     <p class="text-lg text-zinc-300 mb-2">You can support me via UPI:</p>
                     <p class="text-xl font-bold text-white mb-4">
-                        <a href="upi://pay?pa=nagaprasath24-1@okhdfcbank&pn=Nagaprasath&cu=INR" class="upi-link">
+                        <a href="upi://pay?pa=nagaprasath24-1@okhdfcbank&pn=Nagaprasath&cu=INR" class="upi-link hover-glow">
                             <span class="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-700">nagaprasath24-1@okhdfcbank</span>
                         </a>
                     </p>
@@ -559,8 +533,7 @@
                 </div>
             </div>
         </section>
-
-        </main>
+    </main>
 
     <footer class="text-center py-8 px-4 text-zinc-600 text-sm mt-auto">
         © <span id="current-year">2025</span> CINI FX | Created by Nagaprasath | All rights reserved.
@@ -577,10 +550,9 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-revealed');
-                    // Add staggered animation to child elements (h2, h3, p, buttons, service items)
                     const children = entry.target.querySelectorAll('h2, h3, p, .btn-primary, .social-login-button, .service-item');
                     children.forEach((child, index) => {
-                        child.style.animationDelay = `${0.2 + index * 0.08}s`; // Slightly faster stagger
+                        child.style.animationDelay = `${0.2 + index * 0.08}s`;
                     });
                     observer.unobserve(entry.target);
                 }
@@ -592,6 +564,178 @@
             observer.observe(section);
         });
 
+        // --- Interactive Background Logic ---
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = e.clientX / window.innerWidth * 100;
+            const y = e.clientY / window.innerHeight * 100;
+            
+            body.style.backgroundImage = `
+                radial-gradient(circle at ${x}% ${y}%, var(--accent-yellow) 0%, transparent 30%),
+                radial-gradient(circle at 100% 100%, var(--accent-blue) 0%, transparent 30%)
+            `;
+        });
+
+
+        // --- Quiz Logic ---
+        const quizQuestions = [
+            {
+                question: "What is 'chroma keying' more commonly known as in VFX?",
+                options: ["Rotoscoping", "Green Screen", "Motion Capture", "Particle Effects"],
+                answer: "Green Screen"
+            },
+            {
+                question: "Which software is widely used for 3D modeling and animation, especially in indie projects?",
+                options: ["Adobe After Effects", "Nuke", "Blender", "DaVinci Resolve"],
+                answer: "Blender"
+            },
+            {
+                question: "What technique involves creating a matte from a moving image sequence to isolate a subject?",
+                options: ["Match Moving", "Compositing", "Rotoscoping", "Keyframing"],
+                answer: "Rotoscoping"
+            },
+            {
+                question: "In VFX, what is a 'matte painting' used for?",
+                options: ["Color correction", "Creating realistic backgrounds", "Filming on location", "Adding sound effects"],
+                answer: "Creating realistic backgrounds"
+            },
+            {
+                question: "Which element of VFX is used to create realistic-looking explosions, fire, and smoke?",
+                options: ["Fluid Dynamics", "Motion Graphics", "Lighting", "Rendering"],
+                answer: "Fluid Dynamics"
+            },
+            {
+                question: "What is the primary purpose of 'compositing' in visual effects?",
+                options: ["Creating 3D models", "Combining multiple images into a single final image", "Filming with a camera", "Editing a film's script"],
+                answer: "Combining multiple images into a single final image"
+            },
+            {
+                question: "Which of these is NOT a common 3D software for VFX?",
+                options: ["Autodesk Maya", "Cinema 4D", "Houdini", "Microsoft Word"],
+                answer: "Microsoft Word"
+            },
+            {
+                question: "What is 'motion capture' primarily used for?",
+                options: ["Tracking camera movement", "Recording actor's movements for digital characters", "Creating digital explosions", "Generating procedural textures"],
+                answer: "Recording actor's movements for digital characters"
+            },
+            {
+                question: "What does 'rendering' refer to in 3D animation?",
+                options: ["Drawing an object", "The process of generating a 2D image or animation from a 3D model", "Recording audio", "Programming a game"],
+                answer: "The process of generating a 2D image or animation from a 3D model"
+            },
+            {
+                question: "A 'rig' in 3D animation is used to...",
+                options: ["Add textures to a model", "Control a character's movement", "Light a scene", "Render a final image"],
+                answer: "Control a character's movement"
+            },
+            {
+                question: "Which VFX technique tracks the movement of a camera in a real scene so that virtual elements can be seamlessly added?",
+                options: ["Match Moving", "Green Screen", "Masking", "Keyframing"],
+                answer: "Match Moving"
+            },
+            {
+                question: "What is the industry standard software for professional compositing?",
+                options: ["Adobe Premiere Pro", "After Effects", "Nuke", "Blender"],
+                answer: "Nuke"
+            },
+            {
+                question: "What is 'procedural generation' often used for in game development?",
+                options: ["Creating cutscenes", "Developing game storylines", "Automatically generating content like landscapes and buildings", "Recording voice lines"],
+                answer: "Automatically generating content like landscapes and buildings"
+            },
+            {
+                question: "What is a 'keyframe' in animation?",
+                options: ["The final frame of a scene", "A single frame in a video", "A specific point in time where an object's properties are defined", "The first frame of an animation"],
+                answer: "A specific point in time where an object's properties are defined"
+            },
+            {
+                question: "The term 'voxel' is related to...",
+                options: ["2D graphics", "Vector art", "3D pixels", "Audio effects"],
+                answer: "3D pixels"
+            },
+            {
+                question: "Which type of VFX is commonly used to create realistic digital doubles of actors?",
+                options: ["Particle Simulation", "Digital Compositing", "Photogrammetry", "Motion Graphics"],
+                answer: "Photogrammetry"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackArea = document.getElementById('feedback-area');
+        const restartButton = document.getElementById('restart-button');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            restartButton.classList.add('hidden');
+            feedbackArea.classList.add('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < quizQuestions.length) {
+                const q = quizQuestions[currentQuestionIndex];
+                questionText.textContent = `Question ${currentQuestionIndex + 1}: ${q.question}`;
+                optionsContainer.innerHTML = '';
+                q.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('quiz-option-btn');
+                    button.addEventListener('click', () => checkAnswer(option, q.answer));
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                showResults();
+            }
+        }
+
+        function checkAnswer(selectedOption, correctAnswer) {
+            const allButtons = optionsContainer.querySelectorAll('.quiz-option-btn');
+            allButtons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === correctAnswer) {
+                    button.classList.add('correct');
+                }
+                if (button.textContent === selectedOption && selectedOption !== correctAnswer) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedbackArea.textContent = "Correct! ✨";
+                feedbackArea.classList.remove('hidden');
+                feedbackArea.style.color = '#22c55e';
+            } else {
+                feedbackArea.textContent = `Incorrect. The correct answer was: ${correctAnswer}.`;
+                feedbackArea.classList.remove('hidden');
+                feedbackArea.style.color = '#ef4444';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                feedbackArea.classList.add('hidden');
+                showQuestion();
+            }, 2000);
+        }
+
+        function showResults() {
+            questionText.textContent = "Quiz Complete!";
+            optionsContainer.innerHTML = '';
+            feedbackArea.textContent = `You scored ${score} out of ${quizQuestions.length}!`;
+            feedbackArea.classList.remove('hidden');
+            feedbackArea.style.color = '#fff';
+            restartButton.classList.remove('hidden');
+        }
+
+        restartButton.addEventListener('click', startQuiz);
+        document.addEventListener('DOMContentLoaded', startQuiz);
+
+
         // --- 3D Showcase Logic (Three.js with Shaders) ---
         const canvas = document.getElementById('threejs-canvas');
         if (canvas) {
@@ -599,63 +743,65 @@
             const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-            renderer.setClearColor(0x000000, 0); // Transparent background
+            renderer.setClearColor(0x000000, 0);
 
-            const ambientLight = new THREE.AmbientLight(0x404040, 2.5); // Soft white light
+            const ambientLight = new THREE.AmbientLight(0x404040, 2.5);
             scene.add(ambientLight);
 
-            // Create a point light for the 'liquid metal' reflection
-            const pointLight = new THREE.PointLight(0x6ee7b7, 5, 100);
+            const pointLight = new THREE.PointLight(0xf0ff00, 5, 100);
             pointLight.position.set(5, 5, 5);
             scene.add(pointLight);
 
-            // Shaders for the liquid metal effect
             const vertexShader = `
                 uniform float u_time;
+                uniform float u_mouse_state;
                 uniform vec2 u_mouse;
                 uniform vec3 u_lightPos;
                 varying vec3 vNormal;
-                varying vec3 vLight;
+                varying vec3 vPosition;
+                varying float vInteraction;
+
                 void main() {
-                    vNormal = normalize(normalMatrix * normal);
-                    
-                    // Simple displacement effect using sine wave
+                    vNormal = normalMatrix * normal;
+                    vPosition = position;
+
                     vec3 displacedPosition = position;
-                    displacedPosition.x += sin(displacedPosition.y * 3.0 + u_time * 2.0) * 0.2;
-                    displacedPosition.z += cos(displacedPosition.x * 3.0 + u_time * 2.0) * 0.2;
+                    float displacementStrength = 0.5;
                     
+                    float noise1 = sin(displacedPosition.x * 5.0 + u_time * 2.0) * cos(displacedPosition.y * 5.0 + u_time * 2.5);
+                    float noise2 = sin(displacedPosition.y * 5.0 + u_time * 3.0) * cos(displacedPosition.z * 5.0 + u_time * 3.5);
+                    displacedPosition += normal * (noise1 + noise2) * displacementStrength;
+
+                    displacedPosition += normal * u_mouse_state * 0.3 * sin(u_time * 10.0);
+
                     vec4 modelViewPosition = modelViewMatrix * vec4(displacedPosition, 1.0);
                     gl_Position = projectionMatrix * modelViewPosition;
-
-                    vLight = normalize(u_lightPos - modelViewPosition.xyz);
+                    vInteraction = u_mouse_state;
                 }
             `;
 
             const fragmentShader = `
                 uniform float u_time;
-                uniform vec2 u_resolution;
-                uniform float u_mouse_state; // 0 for idle, 1 for dragging
+                uniform float u_mouse_state;
                 varying vec3 vNormal;
-                varying vec3 vLight;
+                varying vec3 vPosition;
+                varying float vInteraction;
 
                 void main() {
                     vec3 normal = normalize(vNormal);
-                    vec3 light = normalize(vLight);
                     
-                    // Basic reflection calculation
-                    vec3 reflected = reflect(light, normal);
-                    float reflectivity = max(0.0, dot(reflected, vec3(0.0, 0.0, 1.0)));
+                    float gradient = mod(vPosition.x + vPosition.y + vPosition.z + u_time * 0.5, 1.0);
+                    vec3 color1 = vec3(0.0, 0.48, 1.0);
+                    vec3 color2 = vec3(1.0, 1.0, 0.0);
+                    vec3 color3 = vec3(0.0, 0.48, 1.0);
                     
-                    // Add a sine wave effect to create a subtle liquid flow
-                    float flowEffect = sin(u_time * 2.0 + normal.x * 5.0) * 0.2 + sin(u_time * 1.5 + normal.y * 5.0) * 0.3;
-                    reflectivity += flowEffect;
+                    vec3 baseColor = mix(color1, color2, smoothstep(0.0, 0.5, gradient));
+                    baseColor = mix(baseColor, color3, smoothstep(0.5, 1.0, gradient));
                     
-                    // Color and glow
-                    vec3 baseColor = vec3(0.1, 0.8, 0.5); // A nice green
-                    vec3 finalColor = baseColor * (reflectivity + 0.5);
+                    float glowIntensity = 1.0 + sin(u_time * 3.0) * 0.2;
+                    float interactionGlow = vInteraction * 2.0;
                     
-                    // Add a slight glow based on mouse interaction
-                    finalColor *= (1.0 + u_mouse_state * 0.2);
+                    vec3 finalColor = baseColor * (glowIntensity + interactionGlow);
                     
                     gl_FragColor = vec4(finalColor, 1.0);
                 }
@@ -674,7 +820,7 @@
                 fragmentShader: fragmentShader,
             });
 
-            const geometry = new THREE.IcosahedronGeometry(1.5, 40);
+            const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
             const sculpture = new THREE.Mesh(geometry, material);
             scene.add(sculpture);
 
@@ -727,14 +873,11 @@
             const animate = (time) => {
                 requestAnimationFrame(animate);
                 uniforms.u_time.value = time * 0.001;
-
                 if (!isDragging) {
-                    // Passive animation and mouse-follow effect
                     sculpture.rotation.y += 0.001;
                     sculpture.rotation.x += 0.001;
                     sculpture.rotation.z += 0.001;
                 }
-                
                 renderer.render(scene, camera);
             };
             animate();
